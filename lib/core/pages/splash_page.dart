@@ -7,6 +7,11 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../widgets/tabletAwareScaffold.dart';
 import '../widgets/screenLogo.dart';
+import '../widgets/progressActionableState.dart';
+
+import '../auth/handlers/email/signInButton.dart' as email;
+import '../auth/handlers/email/signUpButton.dart' as email;
+import '../auth/handlers/google/signInButton.dart' as google;
 
 import '../app_model.dart';
 import '../app_info.dart';
@@ -17,16 +22,11 @@ enum LoginState {
 }
 
 class Splash extends StatefulWidget {
-  Splash({this.signInButtonBuilders, this.signUpButtonBuilders});
-
-  final Map<String, WidgetBuilder> signInButtonBuilders;
-  final Map<String, WidgetBuilder> signUpButtonBuilders;
-
   @override
   State<StatefulWidget> createState() => SplashState();
 }
 
-class SplashState extends State<Splash> {
+class SplashState extends ProgressActionableState<Splash> {
   @override
   void initState() {
     super.initState();
@@ -34,40 +34,54 @@ class SplashState extends State<Splash> {
     _loader = _buildLoader();
   }
 
+  Widget _loader;
+  Widget _loginLoader;
+
   final GlobalKey<AsyncLoaderState> _loaderKey = GlobalKey<AsyncLoaderState>();
 
-  Widget _loader;
+  AuthProvider _getPasswordProvider(AuthService authService) {
+    return authService.authProviders.firstWhere(
+        (prov) => prov.providerName == 'password',
+        orElse: () => null);
+  }
+
+  AuthProvider _getGoogleProvider(AuthService authService) {
+    return authService.authProviders.firstWhere(
+        (prov) => prov.providerName == 'google',
+        orElse: () => null);
+  }
 
   Future<LoginState> _initAppState(AppModel model) async {
-    //Delibrate delay so we dont get flickering.
-    await Future.delayed(Duration(milliseconds: 500), () {});
     await model.refreshAuthUser();
-    if (model.token != null) {
+    if (model.user != null && model.user.isValid) {
       return LoginState.LoginSuccessful;
     } else {
       return LoginState.LoginRequired;
     }
   }
 
-  void _navigateToHome() {
-    new Future.delayed(
-        const Duration(seconds: 0),
-        () => Navigator
-            .of(context)
-            .pushNamedAndRemoveUntil('/home', (item) => false));
-  }
-
   Widget _handleCompleted(AuthService authService, LoginState state) {
     if (state == LoginState.LoginRequired) {
       return _buttons(authService);
     } else if (state == LoginState.LoginSuccessful) {
-      _navigateToHome();
+      //_navigateToHome();
     }
     return Container();
   }
 
   Widget _handleError(AuthService authService, Object error) {
     return _buttons(authService, errorMessage: error.toString());
+  }
+
+  Widget _progressIndicator() {
+    return Padding(
+      padding: EdgeInsets.all(8.0),
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation(Colors.black45)),
+      ),
+    );
   }
 
   Widget _handleSnapshot(AppModel model, BuildContext context,
@@ -77,18 +91,9 @@ class SplashState extends State<Splash> {
     } else if (snapshot.hasError) {
       return _handleError(model.authService, snapshot.error);
     } else {
-      return Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation(Colors.black45)),
-        ),
-      );
+      return _progressIndicator();
     }
   }
-
-  Widget _loginLoader;
 
   Widget _buildLoader() {
     return ScopedModelDescendant<AppModel>(builder: (_, child, model) {
@@ -104,26 +109,34 @@ class SplashState extends State<Splash> {
   }
 
   Widget _buttons(AuthService authService, {String errorMessage}) {
+    var passwordProvider = _getPasswordProvider(authService);
+    var googleProvider = _getGoogleProvider(authService);
+
     List<Widget> widgets = new List<Widget>();
-    widget.signInButtonBuilders?.forEach((providerName, builder) {
-      var widget = builder(context);
-      if (widget != null) {
-        widgets.add(Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0), child: widget));
-      }
-    });
+    if (passwordProvider != null) {
+      widgets.add(Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
+          child: email.SignInButton()));
+    }
+    if (googleProvider != null) {
+      widgets.add(Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
+          child:
+              google.SignInButton(provider: googleProvider, actionable: this)));
+    }
 
     widgets.add(Padding(padding: EdgeInsets.only(top: 16.0)));
-
-    widget.signUpButtonBuilders?.forEach((providerName, builder) {
-      var widget = builder(context);
-      if (widget != null) {
-        widgets.add(Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0), child: widget));
-      }
-    });
+    if (passwordProvider != null) {
+      widgets.add(Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.0),
+          child: email.SignUpButton()));
+    }
 
     return Column(children: widgets);
+  }
+
+  Widget _withProgress(Widget child) {
+    return super.showProgress ? _progressIndicator() : child;
   }
 
   Widget _buildMobileView(
@@ -141,7 +154,7 @@ class SplashState extends State<Splash> {
         Column(children: <Widget>[
           Padding(
             padding: EdgeInsets.all(16.0),
-            child: loader,
+            child: _withProgress(loader),
           )
         ])
       ],
@@ -176,7 +189,7 @@ class SplashState extends State<Splash> {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.all(16.0),
-                    child: loader,
+                    child: _withProgress(loader),
                   )
                 ],
               ),

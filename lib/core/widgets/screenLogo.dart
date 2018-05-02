@@ -16,7 +16,6 @@ class ScreenLogo extends StatelessWidget {
       image: icon,
       height: size.width > 700.0 && size.height > 500.0 ? 128.0 : 96.0,
       width: size.width > 700.0 && size.height > 500.0 ? 128.0 : 96.0,
-      //),
     );
   }
 }

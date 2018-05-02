@@ -6,6 +6,14 @@ import 'package:scoped_model/scoped_model.dart';
 
 import 'app_info.dart';
 
+class AuthUserState {
+  AuthUserState({this.user, this.hasChanged});
+
+  final AuthUser user;
+  final bool hasChanged;
+  bool get isValidUser => user != null && user.isValid;
+}
+
 class AppModel extends Model {
   AppModel({@required this.authService, @required this.appInfo});
 
@@ -18,12 +26,33 @@ class AppModel extends Model {
   final AppInfo appInfo;
   final AuthService authService;
 
-  Future<AppModel> refreshAuthUser() async {
+  Future<AuthUserState> refreshAuthUser() async {
+    var prevUser = _user;
+
     _user = await authService.currentUser();
     _authToken = await authService.currentUserToken();
 
+    bool changed = false;
+    if (prevUser == null) {
+      if (_user != null) {
+        changed = true;
+      }
+    } else {
+      if (_user != null) {
+        if (prevUser.isValid != _user.isValid) {
+          changed = true;
+        } else {
+          if (prevUser.uid != _user.uid) {
+            changed = true;
+          }
+        }
+      } else {
+        changed = true;
+      }
+    }
+
     notifyListeners();
 
-    return this;
+    return new AuthUserState(user: _user, hasChanged: changed);
   }
 }

@@ -31,6 +31,8 @@ class MockEmailProvider extends AuthProvider with LinkableProvider {
       ..email = args['email']
       ..displayName = 'Mocked';
 
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
     service.authUserChanged.value = user;
     return user;
   }

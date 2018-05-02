@@ -38,8 +38,8 @@ class MockGoogleProvider extends AuthProvider with LinkableProvider {
 
   @override
   Future<AuthUser> signIn(Map<String, String> args) async {
-    return await new Future<AuthUser>.delayed(const Duration(milliseconds: 500),
-        () {
+    return await new Future<AuthUser>.delayed(
+        const Duration(milliseconds: 3000), () {
       print('******** Google sign in ********');
       var google = new MockUserGoogleAccount();
       var providers = new List<AuthUserAccount>()..add(google);

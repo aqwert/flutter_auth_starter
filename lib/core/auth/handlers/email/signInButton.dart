@@ -3,9 +3,7 @@ import 'signIn/signIn_page.dart';
 
 class SignInButton extends StatelessWidget {
   void _signIn(BuildContext context) {
-    Navigator
-        .of(context)
-        .pushNamedAndRemoveUntil(SignInPassword.routeName, (item) => false);
+    Navigator.of(context).pushNamed(SignInPassword.routeName);
   }
 
   @override

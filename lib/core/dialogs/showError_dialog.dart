@@ -8,21 +8,21 @@ Future<Null> showErrorDialog(BuildContext context, String message,
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
-      return new AlertDialog(
-        title: new Text('Oops'),
-        content: new SingleChildScrollView(
-          child: new ListBody(
+      return AlertDialog(
+        title: Text('Oops'),
+        content: SingleChildScrollView(
+          child: ListBody(
             children: <Widget>[
-              new Text(message ?? 'An unknown error occured'),
+              Text(message ?? 'An unknown error occured'),
               // (showSigninSuggestion != null && showSigninSuggestion)
               //     ? _signInButton(context)
-              //     : new Container()
+              //     :  Container()
             ],
           ),
         ),
         actions: <Widget>[
-          new FlatButton(
-            child: new Text('OK'),
+          FlatButton(
+            child: Text('OK'),
             onPressed: () {
               Navigator.of(context).pop();
             },

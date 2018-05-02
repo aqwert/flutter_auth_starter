@@ -19,7 +19,7 @@ class SignUpButton extends StatelessWidget {
             style: TextStyle(color: theme.textTheme.body1.color)),
       ),
       OutlineButton(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
+          padding: EdgeInsets.symmetric(horizontal: 32.0),
           textColor: theme.primaryColor,
           onPressed: () => _signUp(context),
           child: Text("Sign Up"))

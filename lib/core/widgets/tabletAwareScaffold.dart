@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
+import 'tabletAwareLayoutBuilder.dart';
+
 class TabletAwareScaffold extends StatelessWidget {
   TabletAwareScaffold(
       {@required this.mobileView,
@@ -11,20 +13,11 @@ class TabletAwareScaffold extends StatelessWidget {
   final Widget tabletView;
   final Color backgroundColor;
 
-  final double tabletThreshold = 660.0;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: backgroundColor,
-        body: LayoutBuilder(builder: (context, constraints) {
-          final bool useMobileLayout = constraints.maxWidth < tabletThreshold;
-
-          if (useMobileLayout) {
-            return mobileView;
-          } else {
-            return tabletView;
-          }
-        }));
+        body: TabletAwareLayoutBuilder(
+            mobileView: mobileView, tabletView: tabletView));
   }
 }

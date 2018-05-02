@@ -6,23 +6,33 @@ import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meta/meta.dart';
 
-class SignInButton extends StatelessWidget {
-  SignInButton({@required this.provider});
+import '../../../common/actionable.dart';
 
-  final AuthProvider provider;
-
-  Future _signIn(BuildContext context) async {
+Future signInAction(AuthProvider provider, Actionable actionable) async {
+  await actionable.performAction((BuildContext context) async {
     await provider.signIn(new Map<String, String>());
 
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (item) => false);
-  }
+    //Navigator.of(context).pushNamedAndRemoveUntil('/home', (item) => false);
+    // new Future.delayed(
+    //     const Duration(seconds: 0),
+    //     () => Navigator
+    //         .of(context)
+    //         .pushNamedAndRemoveUntil('/home', (item) => false));
+  });
+}
+
+class SignInButton extends StatelessWidget {
+  SignInButton({@required this.provider, @required this.actionable});
+
+  final AuthProvider provider;
+  final Actionable actionable;
 
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
       color: Colors.red,
       padding: EdgeInsets.all(8.0),
-      onPressed: () async => await _signIn(context),
+      onPressed: () async => await signInAction(provider, actionable),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
