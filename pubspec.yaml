@@ -12,6 +12,7 @@ dependencies:
   scoped_model: "^0.2.0"
   async_loader: "^0.1.1"
   font_awesome_flutter: 6.0.0
+  url_launcher: "^3.0.0"
 
 dev_dependencies:
   flutter_test:

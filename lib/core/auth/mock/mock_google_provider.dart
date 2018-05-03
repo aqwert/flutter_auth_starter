@@ -19,40 +19,35 @@ class MockGoogleProvider extends AuthProvider with LinkableProvider {
   Future<AuthUser> linkAccount(Map<String, String> args) async {
     var currentUser = service.authUserChanged.value;
 
-    //simulate latency
-    return await new Future<AuthUser>.delayed(
-        const Duration(milliseconds: 1000), () {
-      var providers =
-          new List<AuthUserAccount>.from(currentUser.providerAccounts);
-      providers.add(new MockUserGoogleAccount());
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
 
-      service.authUserChanged.value = new MockUser()
-        ..email = currentUser.email
-        ..displayName = currentUser.displayName
-        ..photoUrl = currentUser.photoUrl
-        ..isEmailVerified = true
-        ..providerAccounts = providers;
-      return service.authUserChanged.value;
-    });
+    var providers =
+        new List<AuthUserAccount>.from(currentUser.providerAccounts);
+    providers.add(new MockUserGoogleAccount());
+
+    service.authUserChanged.value = new MockUser()
+      ..email = currentUser.email
+      ..displayName = currentUser.displayName
+      ..photoUrl = currentUser.photoUrl
+      ..isEmailVerified = true
+      ..providerAccounts = providers;
+    return service.authUserChanged.value;
   }
 
   @override
   Future<AuthUser> signIn(Map<String, String> args) async {
-    return await new Future<AuthUser>.delayed(
-        const Duration(milliseconds: 3000), () {
-      print('******** Google sign in ********');
-      var google = new MockUserGoogleAccount();
-      var providers = new List<AuthUserAccount>()..add(google);
+    await new Future.delayed(const Duration(milliseconds: 2000), () => {});
 
-      service.authUserChanged.value = new MockUser()
-        ..email = google.email
-        ..displayName = google.displayName
-        ..photoUrl = google.photoUrl
-        ..isEmailVerified = true
-        ..providerAccounts = providers;
+    print('******** Google sign in ********');
+    var google = new MockUserGoogleAccount();
+    var providers = new List<AuthUserAccount>()..add(google);
 
-      return service.authUserChanged.value;
-    });
+    return service.authUserChanged.value = new MockUser()
+      ..email = google.email
+      ..displayName = google.displayName
+      ..photoUrl = google.photoUrl
+      ..isEmailVerified = true
+      ..providerAccounts = providers;
   }
 
   @override

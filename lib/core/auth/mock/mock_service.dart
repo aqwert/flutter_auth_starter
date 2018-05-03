@@ -54,24 +54,29 @@ class MockService extends AuthService {
   @override
   Future<AuthUser> setUserDisplayName(String name) async {
     var user = _authChangeNotifier.value;
-    var newUser = new MockUser()
+
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
+    return _authChangeNotifier.value = new MockUser()
       ..displayName = name
       ..email = user.email
       ..isEmailVerified = user.isEmailVerified
       ..photoUrl = user.photoUrl
       ..providerAccounts =
           new List<AuthUserAccount>.from(user.providerAccounts);
-
-    return _authChangeNotifier.value = newUser;
   }
 
   @override
   Future<void> signOut() async {
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
     _authChangeNotifier.value = new MockUser()..email = null;
   }
 
   @override
   Future<void> closeAccount(Map<String, String> reauthenticationArgs) async {
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
     _authChangeNotifier.value = new MockUser()..email = null;
   }
 }

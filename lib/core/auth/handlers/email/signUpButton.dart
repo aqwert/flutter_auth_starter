@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'signUp/signUp_page.dart';
+import 'signUp/sign_up_page.dart';
+
+void signUp(BuildContext context) {
+  Navigator.of(context).pushNamed(SignUpPassword.routeName);
+}
 
 class SignUpButton extends StatelessWidget {
-  void _signUp(BuildContext context) {
-    Navigator
-        .of(context)
-        .pushNamedAndRemoveUntil(SignUpPassword.routeName, (item) => false);
-  }
-
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -21,7 +19,7 @@ class SignUpButton extends StatelessWidget {
       OutlineButton(
           padding: EdgeInsets.symmetric(horizontal: 32.0),
           textColor: theme.primaryColor,
-          onPressed: () => _signUp(context),
+          onPressed: () => signUp(context),
           child: Text("Sign Up"))
     ]);
   }

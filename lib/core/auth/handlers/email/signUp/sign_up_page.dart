@@ -12,23 +12,19 @@ import '../../../../app_model.dart';
 
 import '../../../../widgets/throttledTextEditingController.dart';
 import '../../../../widgets/emailImageCircleAvatar.dart';
-import '../../../../widgets/screen_aware_padding.dart';
 
-import '../signUp/sign_up_page.dart';
-import '../forgotPassword/forgot_password_page.dart';
+import 'sign_up_view_model.dart';
 
-import 'signIn_viewModel.dart';
+class SignUpPassword extends StatefulWidget {
+  static String routeName = '/signUpPassword';
 
-class SignInPassword extends StatefulWidget {
-  static String routeName = '/signInPassword';
-
-  SignInPassword({@required this.authService});
+  SignUpPassword({@required this.authService});
   final AuthService authService;
   @override
-  createState() => new SignInPasswordState();
+  createState() => new SignUpPasswordState();
 }
 
-class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
+class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
   @override
   void initState() {
     super.initState();
@@ -50,10 +46,6 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
         orElse: () => null);
   }
 
-  void _signUp() {
-    Navigator.of(context).pushNamed(SignUpPassword.routeName);
-  }
-
   Widget _logoGravatar(AppInfo appInfo, AuthService authService) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -64,6 +56,17 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
           backgroundColor: Colors.white70,
           defaultImage: AssetImage(appInfo.appIconPath),
           imageProvider: authService.preAuthPhotoProvider),
+    );
+  }
+
+  Widget _displayNameField() {
+    return TextFormField(
+      enabled: !super.showProgress,
+      keyboardType: TextInputType.text,
+      autocorrect: false,
+      decoration: InputDecoration(labelText: 'Display Name (optional)'),
+      validator: _viewModel.validateDisplayName,
+      onSaved: (val) => _viewModel.displayName = val,
     );
   }
 
@@ -89,43 +92,35 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
         onSaved: (val) => _viewModel.password = val);
   }
 
-  Future _signInWithEmailPassword(AuthService authService) async {
+  Widget _passwordConfirmField() {
+    return TextFormField(
+        enabled: !super.showProgress,
+        autocorrect: false,
+        obscureText: true,
+        decoration: InputDecoration(labelText: 'Re-type Password'),
+        validator: _viewModel.validatePassword,
+        onSaved: (val) => _viewModel.passwordConfirm = val);
+  }
+
+  Future _signUpWithEmailPassword(AuthService authService) async {
     _viewModel.validateAll();
 
     var provider = _getPasswordProvider(authService);
-    await provider?.signIn(new Map<String, String>()
+    await provider?.create(new Map<String, String>()
       ..['email'] = _viewModel.email
       ..['password'] = _viewModel.password);
   }
 
-  Widget _signInButton(AuthService authService) {
+  Widget _signUpButton(AuthService authService) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 32.0),
       child: RaisedButton(
-          child: Text('Sign In'),
+          child: Text('Sign Up'),
           onPressed: super.showProgress
               ? null
               : () => super.validateAndSubmit(
-                  (_) async => await _signInWithEmailPassword(authService))),
+                  (_) async => await _signUpWithEmailPassword(authService))),
     );
-  }
-
-  Widget _forgotPasswordButton(AuthService authService) {
-    return authService.options.canSendForgotEmail
-        ? Padding(
-            padding: const EdgeInsets.only(top: 16.0, left: 32.0, right: 32.0),
-            child: FlatButton(
-                child: Text('Forgot password'),
-                onPressed: super.showProgress
-                    ? null
-                    : () {
-                        return showDialog(
-                            context: context,
-                            builder: (_) => new ScreenAwarePadding(
-                                child: new ForgotPassword(widget.authService)),
-                            barrierDismissible: false);
-                      }))
-        : Container();
   }
 
   Widget _progressIndicator() {
@@ -154,10 +149,11 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
                   _logoGravatar(appInfo, authService),
                 ],
               ),
+              _displayNameField(),
               _emailField(),
               _passwordField(),
-              _signInButton(authService),
-              _forgotPasswordButton(authService),
+              _passwordConfirmField(),
+              _signUpButton(authService),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[_progressIndicator()],
@@ -187,10 +183,11 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
               padding: EdgeInsets.symmetric(horizontal: 36.0),
               child: Column(
                 children: <Widget>[
+                  _displayNameField(),
                   _emailField(),
                   _passwordField(),
-                  _signInButton(authService),
-                  _forgotPasswordButton(authService),
+                  _passwordConfirmField(),
+                  _signUpButton(authService),
                 ],
               ),
             ))),
@@ -207,16 +204,7 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
-          title: Text('Login'),
-          actions: <Widget>[
-            FlatButton(
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(
-                      color: Theme.of(context).primaryTextTheme.title.color),
-                ),
-                onPressed: () => _signUp()),
-          ],
+          title: Text('Create New Account'),
         ),
         backgroundColor: Colors.white,
         body: ScopedModelDescendant<AppModel>(builder: (_, child, model) {

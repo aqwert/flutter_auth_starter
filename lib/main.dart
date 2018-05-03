@@ -33,17 +33,14 @@ void main() {
           routes: routing.buildRoutes(authService),
           onGenerateRoute: routing.buildGenerator()));
 
-  //This is so that we can route to the splash screen when the user state changes
+  //This is so that we can route to the splash screen when the user state changes and is signed out
+  //If the user has changed and is signed in route to the home page
   authService.authUserChanged.addListener(() {
     app.model.refreshAuthUser().then((model) {
-      print('Auth Chnaged');
-
       if (model.hasChanged) {
         if (model.isValidUser) {
-          print('NAV tp HOME');
           _navKey.currentState.pushNamedAndRemoveUntil('/home', (_) => false);
         } else {
-          print('NAV to ROOT');
           _navKey.currentState.pushNamedAndRemoveUntil('/', (_) => false);
         }
       }

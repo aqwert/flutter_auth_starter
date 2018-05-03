@@ -11,13 +11,6 @@ import '../../../common/actionable.dart';
 Future signInAction(AuthProvider provider, Actionable actionable) async {
   await actionable.performAction((BuildContext context) async {
     await provider.signIn(new Map<String, String>());
-
-    //Navigator.of(context).pushNamedAndRemoveUntil('/home', (item) => false);
-    // new Future.delayed(
-    //     const Duration(seconds: 0),
-    //     () => Navigator
-    //         .of(context)
-    //         .pushNamedAndRemoveUntil('/home', (item) => false));
   });
 }
 

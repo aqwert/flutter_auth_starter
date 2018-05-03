@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../core/app_model.dart';
-import '../../core/app_info.dart';
+import '../../core/pages/drawer_page.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -10,6 +10,9 @@ class HomePage extends StatelessWidget {
     return ScopedModelDescendant<AppModel>(builder: (_, child, model) {
       return Scaffold(
           appBar: AppBar(title: Text('Flutter Auth Starter')),
+          drawer: new Drawer(
+            child: new DrawerPage(),
+          ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: new Center(

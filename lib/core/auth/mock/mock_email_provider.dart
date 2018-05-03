@@ -10,20 +10,22 @@ class MockEmailProvider extends AuthProvider with LinkableProvider {
   AuthService service;
 
   @override
+  String get providerName => 'password';
+
+  @override
+  String get providerDisplayName => "Email with Password";
+
+  @override
   Future<AuthUser> create(Map<String, String> args) async {
     var user = new MockUser()
       ..email = args['email']
       ..displayName = 'Mocked';
 
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
     service.authUserChanged.value = user;
     return user;
   }
-
-  @override
-  String get providerName => 'password';
-
-  @override
-  String get providerDisplayName => "Email with Password";
 
   @override
   Future<AuthUser> signIn(Map<String, String> args) async {
@@ -39,17 +41,24 @@ class MockEmailProvider extends AuthProvider with LinkableProvider {
 
   @override
   Future<AuthUser> sendPasswordReset(Map<String, String> args) async {
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
     return service.authUserChanged.value;
   }
 
   @override
   Future<AuthUser> changePassword(Map<String, String> args) async {
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
     return service.authUserChanged.value;
   }
 
   @override
   Future<AuthUser> changePrimaryIdentifier(Map<String, String> args) async {
     var currentUser = service.authUserChanged.value;
+
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
     return service.authUserChanged.value = new MockUser()
       ..email = args['email']
       ..displayName = currentUser.displayName
@@ -62,23 +71,24 @@ class MockEmailProvider extends AuthProvider with LinkableProvider {
 
   @override
   Future<AuthUser> sendVerification(Map<String, String> args) async {
-    //pretend that there is a deplay, then the obj gets updated
-    await new Future.delayed(const Duration(milliseconds: 1000), () {
-      var currentUser = service.authUserChanged.value;
-      service.authUserChanged.value = new MockUser()
-        ..email = currentUser.email
-        ..displayName = currentUser.displayName
-        ..photoUrl = currentUser.photoUrl
-        ..isEmailVerified = true
-        ..providerAccounts =
-            new List<AuthUserAccount>.from(currentUser.providerAccounts);
-    });
-    return service.authUserChanged.value;
+    var currentUser = service.authUserChanged.value;
+
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
+    return service.authUserChanged.value = new MockUser()
+      ..email = currentUser.email
+      ..displayName = currentUser.displayName
+      ..photoUrl = currentUser.photoUrl
+      ..isEmailVerified = true
+      ..providerAccounts =
+          new List<AuthUserAccount>.from(currentUser.providerAccounts);
   }
 
   @override
   Future<AuthUser> linkAccount(Map<String, String> args) async {
     var currentUser = service.authUserChanged.value;
+
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
 
     var providers =
         new List<AuthUserAccount>.from(currentUser.providerAccounts);

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'signIn/signIn_page.dart';
 
-class SignInButton extends StatelessWidget {
-  void _signIn(BuildContext context) {
-    Navigator.of(context).pushNamed(SignInPassword.routeName);
-  }
+void signIn(BuildContext context) {
+  Navigator.of(context).pushNamed(SignInPassword.routeName);
+}
 
+class SignInButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return RaisedButton(
       color: theme.primaryColor,
       padding: EdgeInsets.all(8.0),
-      onPressed: () => _signIn(context),
+      onPressed: () => signIn(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
