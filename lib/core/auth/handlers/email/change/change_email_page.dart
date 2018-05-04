@@ -118,6 +118,8 @@ class ChangeEmailState extends FormProgressActionableState<ChangeEmail> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: _header(),
-        body: Padding(padding: EdgeInsets.all(16.0), child: _asForm(_build())));
+        body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: _asForm(_build())));
   }
 }

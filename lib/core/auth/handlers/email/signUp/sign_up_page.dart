@@ -32,6 +32,7 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
     _viewModel = new ViewModel();
 
     _emailController = ThrottledTextEditingController(
+        throttleDurationMilliseconds: 1500,
         onUpdate: (value) => avatarKey.currentState.performUpdate(value));
   }
 
@@ -138,7 +139,7 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
 
   Widget _buildMobileForm(AppInfo appInfo, AuthService authService) {
     return Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: SingleChildScrollView(
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,

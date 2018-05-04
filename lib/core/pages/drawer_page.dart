@@ -142,7 +142,7 @@ class DrawerPageState extends State<DrawerPage> {
     }
   }
 
-  Widget _gravatarImage(
+  Widget _userPhotoImage(
       AppInfo appInfo, AuthService authService, AuthUser user) {
     return EmailImageCircleAvatar(
       defaultImage: AssetImage(appInfo.avatarDefaultAppIconPath),
@@ -266,7 +266,8 @@ class DrawerPageState extends State<DrawerPage> {
               }),
           accountName: Text(userInfo.displayName),
           accountEmail: Text(userInfo.email),
-          currentAccountPicture: _gravatarImage(appInfo, authService, userInfo),
+          currentAccountPicture:
+              _userPhotoImage(appInfo, authService, userInfo),
           decoration: BoxDecoration(color: theme.accentColor),
         ),
         userInfo.isEmailVerified

@@ -121,7 +121,7 @@ class ForgotPasswordState extends FormProgressActionableState<ForgotPassword> {
             leading: super.showProgress ? new Container() : new CloseButton()),
         body: ScopedModelDescendant<AppModel>(builder: (_, child, model) {
           return Padding(
-              padding: EdgeInsets.all(0.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: _asForm(_buildForm(model.authService)));
         }));
   }
