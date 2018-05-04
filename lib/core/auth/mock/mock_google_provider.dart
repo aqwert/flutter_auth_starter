@@ -2,7 +2,7 @@ import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'dart:async';
 
 import 'mock_user.dart';
-import 'mock_userAccount.dart';
+import 'mock_user_account.dart';
 
 class MockGoogleProvider extends AuthProvider with LinkableProvider {
   MockGoogleProvider(this.service);

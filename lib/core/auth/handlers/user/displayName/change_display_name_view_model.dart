@@ -2,7 +2,7 @@ import '../../../../validators/validator.dart';
 import '../../../../validators/display_name_validator.dart'
     as displayNameValidator;
 
-import '../../../../common/appException.dart';
+import '../../../../common/app_exception.dart';
 
 class ViewModel {
   ViewModel({this.displayName}) {

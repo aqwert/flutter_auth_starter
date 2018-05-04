@@ -1,7 +1,7 @@
 import '../../../../validators/validator.dart';
-import '../../../../validators/emailValidator.dart' as emailValidator;
+import '../../../../validators/email_validator.dart' as emailValidator;
 
-import '../../../../common/appException.dart';
+import '../../../../common/app_exception.dart';
 
 class ViewModel {
   ViewModel({this.email}) {

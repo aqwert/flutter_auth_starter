@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 
-import '../../../../widgets/formProgressActionableState.dart';
+import '../../../../widgets/form_progress_actionable_state.dart';
 
 import 'change_password_view_model.dart';
 

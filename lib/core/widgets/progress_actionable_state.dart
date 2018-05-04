@@ -2,10 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import 'progressableState.dart';
+import 'progressable_state.dart';
 import '../common/actionable.dart';
-import '../common/appException.dart';
-import '../dialogs/showError_dialog.dart';
+import '../common/app_exception.dart';
+import '../dialogs/show_error_dialog.dart';
 
 abstract class ProgressActionableState<T extends StatefulWidget>
     extends ProgressableState<T> with Actionable {

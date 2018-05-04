@@ -5,7 +5,7 @@ import 'core/app_info.dart';
 import 'core/pages/splash_page.dart';
 import 'theme.dart';
 import 'routes.dart' as routing;
-import 'mockAuthService.dart' as auth;
+import 'mock_auth_service.dart' as auth;
 
 final GlobalKey<NavigatorState> _navKey = new GlobalKey<NavigatorState>();
 

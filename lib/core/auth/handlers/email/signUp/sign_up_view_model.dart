@@ -1,12 +1,12 @@
 import '../../../../validators/validator.dart';
-import '../../../../validators/emailValidator.dart' as emailValidator;
-import '../../../../validators/passwordValidator.dart' as passwordValidator;
+import '../../../../validators/email_validator.dart' as emailValidator;
+import '../../../../validators/password_validator.dart' as passwordValidator;
 import '../../../../validators/display_name_validator.dart'
     as displayNameValidator;
 import '../../../../validators/words_match_validator.dart'
     as passwordsMatchValidator;
 
-import '../../../../common/appException.dart';
+import '../../../../common/app_exception.dart';
 
 class ViewModel {
   ViewModel({this.email, this.password}) {

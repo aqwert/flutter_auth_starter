@@ -10,10 +10,10 @@ import '../auth/handlers/email/change/change_email_page.dart';
 import '../auth/handlers/email/change/change_password_page.dart';
 import '../auth/handlers/user/displayName/change_display_name_page.dart';
 import '../auth/handlers/user/closeAccount/close_account_page.dart';
-import '../dialogs/showError_dialog.dart';
+import '../dialogs/show_error_dialog.dart';
 import '../dialogs/show_ok_cancel_dialog.dart';
 import '../widgets/screen_aware_padding.dart';
-import '../widgets/emailImageCircleAvatar.dart';
+import '../widgets/email_image_circle_avatar.dart';
 import '../app_info.dart';
 import '../app_model.dart';
 
@@ -207,7 +207,7 @@ class DrawerPageState extends State<DrawerPage> {
                 canChangePassword(authService, userInfo)
             ? Divider()
             : Container(),
-        _listItem('Link Accounts', () => _linkAccounts(authService, userInfo),
+        _listItem('Accounts', () => _linkAccounts(authService, userInfo),
             show: authService.options.canLinkAccounts),
         authService.options.canLinkAccounts ? Divider() : Container(),
         _listItem('Close Account', () => _closeAccount(authService, userInfo),

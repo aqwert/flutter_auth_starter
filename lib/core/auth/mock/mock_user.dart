@@ -1,6 +1,6 @@
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 
-import 'mock_userAccount.dart';
+import 'mock_user_account.dart';
 
 class MockUser extends AuthUser {
   @override

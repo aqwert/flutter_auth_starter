@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 
 import 'close_account_view_model.dart';
-import '../../../../widgets/FormProgressActionableState.dart';
+import '../../../../widgets/form_progress_actionable_state.dart';
 
 class CloseAccount extends StatefulWidget {
   CloseAccount(this.authService);

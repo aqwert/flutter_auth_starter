@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
-import 'tabletAwareLayoutBuilder.dart';
+import 'tablet_aware_layout_builder.dart';
 
 class TabletAwareScaffold extends StatelessWidget {
   TabletAwareScaffold(

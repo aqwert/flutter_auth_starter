@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import '../../../../widgets/formProgressActionableState.dart';
+import '../../../../widgets/form_progress_actionable_state.dart';
 import '../../../../app_model.dart';
 
 import 'forgot_password_view_model.dart';

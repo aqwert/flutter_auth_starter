@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import '../widgets/tabletAwareScaffold.dart';
-import '../widgets/screenLogo.dart';
-import '../widgets/progressActionableState.dart';
+import '../widgets/tablet_aware_scaffold.dart';
+import '../widgets/screen_logo.dart';
+import '../widgets/progress_actionable_state.dart';
 
-import '../auth/handlers/email/signInButton.dart' as email;
-import '../auth/handlers/email/signUpButton.dart' as email;
-import '../auth/handlers/google/signInButton.dart' as google;
+import '../auth/handlers/email/sign_in_button.dart' as email;
+import '../auth/handlers/email/sign_up_button.dart' as email;
+import '../auth/handlers/google/sign_in_button.dart' as google;
 
 import '../app_model.dart';
 import '../app_info.dart';

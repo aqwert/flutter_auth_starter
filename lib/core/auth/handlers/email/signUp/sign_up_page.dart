@@ -5,13 +5,13 @@ import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:meta/meta.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-import '../../../../widgets/formProgressActionableState.dart';
-import '../../../../widgets/tabletAwareLayoutBuilder.dart';
+import '../../../../widgets/form_progress_actionable_state.dart';
+import '../../../../widgets/tablet_aware_layout_builder.dart';
 import '../../../../app_info.dart';
 import '../../../../app_model.dart';
 
-import '../../../../widgets/throttledTextEditingController.dart';
-import '../../../../widgets/emailImageCircleAvatar.dart';
+import '../../../../widgets/throttled_text_editing_controller.dart';
+import '../../../../widgets/email_image_circle_avatar.dart';
 
 import 'sign_up_view_model.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 
 import 'src/pages/home_page.dart';
-import 'core/auth/handlers/email/signIn/signIn_page.dart';
+import 'core/auth/handlers/email/signIn/sign_in_page.dart';
 import 'core/auth/handlers/email/signUp/sign_up_page.dart';
 import 'core/auth/handlers/link/linkAccounts/link_accounts_page.dart';
 

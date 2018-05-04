@@ -1,7 +1,7 @@
 import '../../../../validators/validator.dart';
-import '../../../../validators/passwordValidator.dart' as passwordValidator;
+import '../../../../validators/password_validator.dart' as passwordValidator;
 
-import '../../../../common/appException.dart';
+import '../../../../common/app_exception.dart';
 
 class ViewModel {
   ViewModel() {
