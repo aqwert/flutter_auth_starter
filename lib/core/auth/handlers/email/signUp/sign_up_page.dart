@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/gestures.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:meta/meta.dart';
@@ -16,10 +18,6 @@ import '../../../../widgets/email_image_circle_avatar.dart';
 import 'sign_up_view_model.dart';
 
 class SignUpPassword extends StatefulWidget {
-  static String routeName = '/signUpPassword';
-
-  SignUpPassword({@required this.authService});
-  final AuthService authService;
   @override
   createState() => new SignUpPasswordState();
 }
@@ -33,13 +31,21 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
 
     _emailController = ThrottledTextEditingController(
         throttleDurationMilliseconds: 1500,
-        onUpdate: (value) => avatarKey.currentState.performUpdate(value));
+        onUpdate: (value) => avatarKey.currentState?.performUpdate(value));
   }
 
   ViewModel _viewModel;
   TextEditingController _emailController;
 
   final avatarKey = GlobalKey<EmailImageCircleAvatarState>();
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   AuthProvider _getPasswordProvider(AuthService authService) {
     return authService.authProviders.firstWhere(
@@ -103,13 +109,61 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
         onSaved: (val) => _viewModel.passwordConfirm = val);
   }
 
+  _termsText(AppInfo appInfo) {
+    return RichText(
+      text: TextSpan(
+        children: [
+          TextSpan(
+            text: 'I agree to ',
+            style: TextStyle(color: Theme.of(context).textTheme.body1.color),
+          ),
+          TextSpan(
+            text: 'Terms of Service',
+            style: TextStyle(color: Theme.of(context).accentColor),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                _launchURL(appInfo.termsOfServiceUrl);
+              },
+          ),
+          TextSpan(
+            text: ' and ',
+            style: TextStyle(color: Theme.of(context).textTheme.body1.color),
+          ),
+          TextSpan(
+            text: 'Privacy Policy',
+            style: TextStyle(color: Theme.of(context).accentColor),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                _launchURL(appInfo.privacyPolicyUrl);
+              },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _termsAcceptance(AppInfo appInfo) {
+    return new Container(
+      padding: const EdgeInsets.all(8.0),
+      child: new Row(children: <Widget>[
+        new Checkbox(
+            value: _viewModel.termsAccepted,
+            onChanged: super.showProgress
+                ? null
+                : (val) => setState(() {
+                      _viewModel.termsAccepted = val;
+                    })),
+        new Expanded(child: _termsText(appInfo)),
+      ]),
+    );
+  }
+
   Future _signUpWithEmailPassword(AuthService authService) async {
     _viewModel.validateAll();
 
     var provider = _getPasswordProvider(authService);
-    await provider?.create(new Map<String, String>()
-      ..['email'] = _viewModel.email
-      ..['password'] = _viewModel.password);
+    await provider
+        ?.create({'email': _viewModel.email, 'password': _viewModel.password});
   }
 
   Widget _signUpButton(AuthService authService) {
@@ -127,12 +181,9 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
   Widget _progressIndicator() {
     return super.showProgress
         ? Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(Colors.black45)),
-            ),
+            padding: EdgeInsets.all(16.0),
+            child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Colors.black45)),
           )
         : Container();
   }
@@ -154,6 +205,7 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
               _emailField(),
               _passwordField(),
               _passwordConfirmField(),
+              _termsAcceptance(appInfo),
               _signUpButton(authService),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -188,6 +240,7 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
                   _emailField(),
                   _passwordField(),
                   _passwordConfirmField(),
+                  _termsAcceptance(appInfo),
                   _signUpButton(authService),
                 ],
               ),
@@ -208,12 +261,11 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
           title: Text('Create New Account'),
         ),
         backgroundColor: Colors.white,
-        body: ScopedModelDescendant<AppModel>(builder: (_, child, model) {
-          return TabletAwareLayoutBuilder(
-              mobileView:
-                  _asForm(_buildMobileForm(model.appInfo, model.authService)),
-              tabletView:
-                  _asForm(_buildTabletForm(model.appInfo, model.authService)));
-        }));
+        body: ScopedModelDescendant<AppModel>(
+            builder: (_, child, model) => TabletAwareLayoutBuilder(
+                mobileView:
+                    _asForm(_buildMobileForm(model.appInfo, model.authService)),
+                tabletView: _asForm(
+                    _buildTabletForm(model.appInfo, model.authService)))));
   }
 }

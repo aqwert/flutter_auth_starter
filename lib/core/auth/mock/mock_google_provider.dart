@@ -4,7 +4,7 @@ import 'dart:async';
 import 'mock_user.dart';
 import 'mock_user_account.dart';
 
-class MockGoogleProvider extends AuthProvider with LinkableProvider {
+class MockGoogleProvider extends AuthProvider implements LinkableProvider {
   MockGoogleProvider(this.service);
 
   AuthService service;

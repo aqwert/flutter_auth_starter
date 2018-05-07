@@ -1,15 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../../../../widgets/form_progress_actionable_state.dart';
-
+import '../../../../app_model.dart';
 import 'change_email_view_model.dart';
+import '../icon.dart';
 
 class ChangeEmail extends StatefulWidget {
-  ChangeEmail(this.authService);
+  //ChangeEmail(this.authService);
 
-  final AuthService authService;
+  //final AuthService authService;
 
   @override
   createState() => new ChangeEmailState();
@@ -31,16 +33,16 @@ class ChangeEmailState extends FormProgressActionableState<ChangeEmail> {
         orElse: () => null);
   }
 
-  Future _changeEmail() async {
-    var provider = _getPasswordProvider(widget.authService);
+  Future _changeEmail(AuthService authService) async {
+    var provider = _getPasswordProvider(authService);
 
     await provider?.changePrimaryIdentifier(
         {'email': _viewModel.email, 'password': _viewModel.password});
 
-    Navigator.of(context).pop(true);
+    Navigator.pop(context);
   }
 
-  Widget _header() {
+  Widget _header(AuthService authService) {
     return AppBar(
         leading: CloseButton(),
         title: Text('Change Email'),
@@ -49,17 +51,20 @@ class ChangeEmailState extends FormProgressActionableState<ChangeEmail> {
               icon: Icon(Icons.done),
               onPressed: super.showProgress
                   ? null
-                  : () => super
-                      .validateAndSubmit((_) async => await _changeEmail())),
+                  : () => super.validateAndSubmit(
+                      (_) async => await _changeEmail(authService))),
         ]);
   }
 
   Widget _emailField() {
     return ListTile(
       leading: Icon(
-        Icons.email,
+        providerIcon,
       ),
       title: TextFormField(
+          enabled: !super.showProgress,
+          keyboardType: TextInputType.emailAddress,
+          autocorrect: false,
           decoration: InputDecoration(labelText: 'New Email'),
           validator: _viewModel.validateEmail,
           onSaved: (val) => _viewModel.email = val),
@@ -72,6 +77,8 @@ class ChangeEmailState extends FormProgressActionableState<ChangeEmail> {
         Icons.lock,
       ),
       title: TextFormField(
+          enabled: !super.showProgress,
+          autocorrect: false,
           obscureText: true,
           decoration: InputDecoration(labelText: 'Current Password'),
           validator: _viewModel.validatePassword,
@@ -82,12 +89,9 @@ class ChangeEmailState extends FormProgressActionableState<ChangeEmail> {
   Widget _progressIndicator() {
     return super.showProgress
         ? Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(Colors.black45)),
-            ),
+            padding: EdgeInsets.all(16.0),
+            child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Colors.black45)),
           )
         : Container();
   }
@@ -116,10 +120,11 @@ class ChangeEmailState extends FormProgressActionableState<ChangeEmail> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _header(),
-        body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: _asForm(_build())));
+    return ScopedModelDescendant<AppModel>(
+        builder: (_, child, model) => Scaffold(
+            appBar: _header(model.authService),
+            body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: _asForm(_build()))));
   }
 }

@@ -75,12 +75,9 @@ class SplashState extends ProgressActionableState<Splash> {
 
   Widget _progressIndicator() {
     return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Padding(
-        padding: EdgeInsets.all(8.0),
-        child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation(Colors.black45)),
-      ),
+      padding: EdgeInsets.all(16.0),
+      child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation(Colors.black45)),
     );
   }
 
@@ -167,7 +164,7 @@ class SplashState extends ProgressActionableState<Splash> {
       children: <Widget>[
         Expanded(
             flex: 1,
-            child: Material(
+            child: Container(
                 color: splashBackgroundColor,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

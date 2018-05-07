@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import 'close_account_view_model.dart';
 import '../../../../widgets/form_progress_actionable_state.dart';
+import '../../../../app_model.dart';
 
 class CloseAccount extends StatefulWidget {
-  CloseAccount(this.authService);
+  //CloseAccount(this.authService);
 
-  final AuthService authService;
+  //final AuthService authService;
 
   @override
   createState() => new CloseAccountState();
@@ -24,11 +26,11 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
 
   ViewModel _viewModel;
 
-  Future _closeAccount() async {
+  Future _closeAccount(AuthService authService) async {
     _viewModel.validateAll();
 
-    var user = await widget.authService.currentUser();
-    await widget.authService
+    var user = await authService.currentUser();
+    await authService
         .closeAccount({'email': user.email, 'password': _viewModel.password});
   }
 
@@ -52,17 +54,14 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
   Widget _progressIndicator() {
     return super.showProgress
         ? Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(Colors.black45)),
-            ),
+            padding: EdgeInsets.all(16.0),
+            child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Colors.black45)),
           )
         : Container();
   }
 
-  Widget _build() {
+  Widget _build(AuthService authService) {
     return SingleChildScrollView(
         child: Column(children: <Widget>[
       Padding(
@@ -76,8 +75,8 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
             child: Text('Close Account'),
             onPressed: super.showProgress
                 ? null
-                : () => super
-                    .validateAndSubmit((_) async => await _closeAccount())),
+                : () => super.validateAndSubmit(
+                    (_) async => await _closeAccount(authService))),
       ),
       _progressIndicator(),
     ]));
@@ -89,10 +88,11 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _header(),
-        body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: _asForm(_build())));
+    return ScopedModelDescendant<AppModel>(
+        builder: (_, child, model) => Scaffold(
+            appBar: _header(),
+            body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: _asForm(_build(model.authService)))));
   }
 }

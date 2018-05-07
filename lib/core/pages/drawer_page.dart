@@ -16,6 +16,7 @@ import '../widgets/screen_aware_padding.dart';
 import '../widgets/email_image_circle_avatar.dart';
 import '../app_info.dart';
 import '../app_model.dart';
+import '../common/dialog.dart';
 
 import 'license_page.dart' as app;
 
@@ -61,9 +62,9 @@ class DrawerPageState extends State<DrawerPage> {
 
   Future _sendVerifyEmail(AuthService authService, AuthUser userInfo) async {
     return await showOkCancelDialog(() async {
-      Navigator.of(context).pop();
+      Navigator.pop(context);
       await _sendVerificationEmail(authService, userInfo);
-    }, () => Navigator.of(context).pop(),
+    }, () => Navigator.pop(context),
         context: context,
         caption: 'Send Verification Email',
         message:
@@ -74,7 +75,7 @@ class DrawerPageState extends State<DrawerPage> {
     Navigator.pop(context);
   }
 
-  Future<void> _logout(AuthService authService) async {
+  Future _logout(AuthService authService) {
     return showOkCancelDialog(
         () async => await authService.signOut(), () => _pop(),
         caption: 'Confirm',
@@ -82,41 +83,29 @@ class DrawerPageState extends State<DrawerPage> {
         context: context);
   }
 
-  Future _changeDisplayName(AuthService authService, AuthUser userInfo) async {
-    await showDialog(
+  Future _changeDisplayName(AuthUser userInfo) {
+    return openDialog(
         context: context,
-        builder: (BuildContext context) => ScreenAwarePadding(
-            child: ChangeDisplayName(authService, userInfo.displayName)),
-        barrierDismissible: false);
+        builder: (_) => ChangeDisplayName(displayName: userInfo.displayName));
   }
 
-  Future _changeEmail(AuthService authService, AuthUser userInfo) async {
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) =>
-            ScreenAwarePadding(child: ChangeEmail(authService)),
-        barrierDismissible: false);
+  Future _changeEmail() {
+    return openDialog(context: context, builder: (_) => ChangeEmail());
   }
 
-  Future _changePassword(AuthService authService, AuthUser userInfo) async {
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) =>
-            ScreenAwarePadding(child: ChangePassword(authService)),
-        barrierDismissible: false);
+  Future _changePassword() {
+    return openDialog(context: context, builder: (_) => ChangePassword());
   }
 
-  Future _closeAccount(AuthService authService, AuthUser userInfo) async {
-    await showDialog(
-        context: context,
-        builder: (BuildContext context) =>
-            ScreenAwarePadding(child: CloseAccount(authService)),
-        barrierDismissible: false);
+  Future _closeAccount() {
+    return openDialog(context: context, builder: (_) => CloseAccount());
   }
 
-  void _linkAccounts(AuthService authService, AuthUser userInfo) {
-    Navigator.of(context).pop();
-    Navigator.of(context).pushNamed(LinkAccounts.routeName);
+  Future _linkAccounts() {
+    Navigator.pop(context);
+
+    return Navigator.push(
+        context, MaterialPageRoute(builder: (_) => LinkAccounts()));
   }
 
   void _about(AppInfo appInfo) {
@@ -195,22 +184,20 @@ class DrawerPageState extends State<DrawerPage> {
     return new Column(
       children: <Widget>[
         _listItem('Change / Set Display Name',
-            () => _changeDisplayName(authService, userInfo),
+            () async => await _changeDisplayName(userInfo),
             show: canChangeDisplayName(authService, userInfo)),
-        _listItem(
-            'Change Email Address', () => _changeEmail(authService, userInfo),
+        _listItem('Change Email Address', () async => await _changeEmail(),
             show: canChangeEmail(authService, userInfo)),
-        _listItem(
-            'Change Password', () => _changePassword(authService, userInfo),
+        _listItem('Change Password', () async => await _changePassword(),
             show: canChangePassword(authService, userInfo)),
         canChangeEmail(authService, userInfo) ||
                 canChangePassword(authService, userInfo)
             ? Divider()
             : Container(),
-        _listItem('Accounts', () => _linkAccounts(authService, userInfo),
+        _listItem('Accounts', () async => await _linkAccounts(),
             show: authService.options.canLinkAccounts),
         authService.options.canLinkAccounts ? Divider() : Container(),
-        _listItem('Close Account', () => _closeAccount(authService, userInfo),
+        _listItem('Close Account', () async => await _closeAccount(),
             subTitle: "Permanately delete account and associated data",
             textColor: Theme.of(context).errorColor,
             show: authService.options.canDeleteAccount),

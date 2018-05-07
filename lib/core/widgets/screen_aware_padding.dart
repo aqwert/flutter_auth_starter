@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ScreenAwarePadding extends StatelessWidget {
-  ScreenAwarePadding({@required this.child});
+  ScreenAwarePadding({Key key, @required this.child}) : super(key: key);
 
   final Widget child;
 

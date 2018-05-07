@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 class TabletAwareLayoutBuilder extends StatelessWidget {
-  TabletAwareLayoutBuilder({@required this.mobileView, this.tabletView});
+  TabletAwareLayoutBuilder(
+      {Key key, @required this.mobileView, this.tabletView})
+      : super(key: key);
 
   final Widget mobileView;
   final Widget tabletView;

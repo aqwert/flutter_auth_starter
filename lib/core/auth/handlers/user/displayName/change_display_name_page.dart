@@ -1,15 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import 'change_display_name_view_model.dart';
 import '../../../../widgets/form_progress_actionable_state.dart';
+import '../../../../app_model.dart';
 
 class ChangeDisplayName extends StatefulWidget {
-  ChangeDisplayName(this.authService, this.displayName);
+  ChangeDisplayName({this.displayName});
 
   final String displayName;
-  final AuthService authService;
+  //final AuthService authService;
 
   @override
   createState() => new ChangeDisplayNameState();
@@ -26,14 +28,14 @@ class ChangeDisplayNameState
 
   ViewModel _viewModel;
 
-  Future _setDisplayName() async {
+  Future _setDisplayName(AuthService authService) async {
     _viewModel.validateAll();
-    await widget.authService.setUserDisplayName(_viewModel.displayName);
+    await authService.setUserDisplayName(_viewModel.displayName);
 
-    Navigator.of(context).pop(true);
+    Navigator.pop(context);
   }
 
-  Widget _header() {
+  Widget _header(AuthService authService) {
     return AppBar(
         leading: CloseButton(),
         title: Text('Change Display Name'),
@@ -42,8 +44,8 @@ class ChangeDisplayNameState
               icon: new Icon(Icons.done),
               onPressed: super.showProgress
                   ? null
-                  : () => super
-                      .validateAndSubmit((_) async => await _setDisplayName())),
+                  : () => super.validateAndSubmit(
+                      (_) async => await _setDisplayName(authService))),
         ]);
   }
 
@@ -63,12 +65,9 @@ class ChangeDisplayNameState
   Widget _progressIndicator() {
     return super.showProgress
         ? Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(Colors.black45)),
-            ),
+            padding: EdgeInsets.all(16.0),
+            child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Colors.black45)),
           )
         : Container();
   }
@@ -87,10 +86,12 @@ class ChangeDisplayNameState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _header(),
-        body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: _asForm(_build())));
+    
+    return ScopedModelDescendant<AppModel>(
+        builder: (_, child, model) => Scaffold(
+            appBar: _header(model.authService),
+            body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: _asForm(_build()))));
   }
 }

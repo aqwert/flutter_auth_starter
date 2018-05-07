@@ -24,7 +24,7 @@ Future<Null> showErrorDialog(BuildContext context, String message,
           FlatButton(
             child: Text('OK'),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.pop(context);
             },
           ),
         ],

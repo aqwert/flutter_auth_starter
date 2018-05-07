@@ -4,6 +4,7 @@ import '../../../../validators/words_match_validator.dart'
     as passwordsMatchValidator;
 
 import '../../../../common/app_exception.dart';
+import '../../../../validators/validate_if.dart';
 
 class ViewModel {
   ViewModel() {
@@ -16,13 +17,18 @@ class ViewModel {
         .add(() => validatePasswordsMatch(newPassword, newPasswordConfirm));
   }
 
+  //only want to validate field if either there is some text or
+  // the submit button clicked and the field is empty
+  bool emptyTextValidation = false;
+
   String currentPassword = '';
   String newPassword = '';
   String newPasswordConfirm = '';
 
   Validator _validator;
 
-  String validatePassword(String value) => passwordValidator.validate(value);
+  String validatePassword(String value) => validateIfNotEmpty(
+      emptyTextValidation, value, passwordValidator.validate);
 
   String validatePasswordsMatch(String value1, String value2) =>
       passwordsMatchValidator.validate(value1, value2,

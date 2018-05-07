@@ -6,6 +6,8 @@ import '../../../../validators/display_name_validator.dart'
 import '../../../../validators/words_match_validator.dart'
     as passwordsMatchValidator;
 
+import '../../../../validators/validate_if.dart';
+
 import '../../../../common/app_exception.dart';
 
 class ViewModel {
@@ -19,28 +21,41 @@ class ViewModel {
         .add(() => validatePasswordsMatch(password, passwordConfirm));
   }
 
+  //only want to validate field if either there is some text or
+  // the submit button clicked and the field is empty
+  bool emptyTextValidation = false;
+
   String displayName = '';
   String email = '';
   String password = '';
   String passwordConfirm = '';
 
+  bool termsAccepted = false;
+
   Validator _validator;
 
-  String validateDisplayName(String value) =>
-      displayNameValidator.validate(value);
+  String validateDisplayName(String value) => validateIfNotEmpty(
+      emptyTextValidation, value, displayNameValidator.validate);
 
-  String validateEmail(String value) => emailValidator.validate(value);
+  String validateEmail(String value) =>
+      validateIfNotEmpty(emptyTextValidation, value, emailValidator.validate);
 
-  String validatePassword(String value) => passwordValidator.validate(value);
+  String validatePassword(String value) => validateIfNotEmpty(
+      emptyTextValidation, value, passwordValidator.validate);
 
   String validatePasswordsMatch(String value1, String value2) =>
       passwordsMatchValidator.validate(value1, value2,
           customOnError: "Passwords do not match");
 
   void validateAll() {
+    emptyTextValidation = true;
+
     var errors = _validator.validate();
     if (errors != null && errors.length > 0) {
       throw new AppException(errors);
+    } else if (!termsAccepted) {
+      throw new AppException(
+          "Please read and accept Terms of Service and Privacy Policy");
     }
   }
 }

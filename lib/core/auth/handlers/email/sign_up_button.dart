@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'signUp/sign_up_page.dart';
 
 void signUp(BuildContext context) {
-  Navigator.of(context).pushNamed(SignUpPassword.routeName);
+  Navigator.push(context, MaterialPageRoute(builder: (_) => SignUpPassword()));
 }
 
 class SignUpButton extends StatelessWidget {

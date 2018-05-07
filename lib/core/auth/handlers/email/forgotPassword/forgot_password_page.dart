@@ -10,10 +10,6 @@ import '../../../../app_model.dart';
 import 'forgot_password_view_model.dart';
 
 class ForgotPassword extends StatefulWidget {
-  ForgotPassword(this.authService);
-
-  final AuthService authService;
-
   @override
   createState() => new ForgotPasswordState();
 }
@@ -39,9 +35,7 @@ class ForgotPasswordState extends FormProgressActionableState<ForgotPassword> {
     var provider = _getPasswordProvider(authService);
 
     if (provider != null) {
-      await provider.sendPasswordReset(
-          new Map<String, String>()..['email'] = _viewModel.email);
-
+      await provider.sendPasswordReset({'email': _viewModel.email});
       setState(() {
         _showSendMessage = true;
       });
@@ -74,12 +68,9 @@ class ForgotPasswordState extends FormProgressActionableState<ForgotPassword> {
   Widget _progressIndicator() {
     return super.showProgress
         ? Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(Colors.black45)),
-            ),
+            padding: EdgeInsets.all(16.0),
+            child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Colors.black45)),
           )
         : Container();
   }
@@ -119,10 +110,9 @@ class ForgotPasswordState extends FormProgressActionableState<ForgotPassword> {
         appBar: AppBar(
             title: Text('Reset Password'),
             leading: super.showProgress ? new Container() : new CloseButton()),
-        body: ScopedModelDescendant<AppModel>(builder: (_, child, model) {
-          return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: _asForm(_buildForm(model.authService)));
-        }));
+        body: ScopedModelDescendant<AppModel>(
+            builder: (_, child, model) => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: _asForm(_buildForm(model.authService)))));
   }
 }

@@ -5,9 +5,11 @@ import 'tablet_aware_layout_builder.dart';
 
 class TabletAwareScaffold extends StatelessWidget {
   TabletAwareScaffold(
-      {@required this.mobileView,
+      {Key key,
+      @required this.mobileView,
       @required this.tabletView,
-      this.backgroundColor = Colors.white});
+      this.backgroundColor = Colors.white})
+      : super(key: key);
 
   final Widget mobileView;
   final Widget tabletView;

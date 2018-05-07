@@ -5,6 +5,7 @@ import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:meta/meta.dart';
 import 'package:scoped_model/scoped_model.dart';
 
+import '../../../../common/dialog.dart';
 import '../../../../widgets/form_progress_actionable_state.dart';
 import '../../../../widgets/tablet_aware_layout_builder.dart';
 import '../../../../app_info.dart';
@@ -20,10 +21,10 @@ import '../forgotPassword/forgot_password_page.dart';
 import 'sign_in_view_model.dart';
 
 class SignInPassword extends StatefulWidget {
-  static String routeName = '/signInPassword';
+  //static String routeName = '/signInPassword';
 
-  SignInPassword({@required this.authService});
-  final AuthService authService;
+  //SignInPassword({@required this.authService});
+  //final AuthService authService;
   @override
   createState() => new SignInPasswordState();
 }
@@ -52,7 +53,8 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
   }
 
   void _signUp() {
-    Navigator.of(context).pushNamed(SignUpPassword.routeName);
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => new SignUpPassword()));
   }
 
   Widget _logoGravatar(AppInfo appInfo, AuthService authService) {
@@ -94,9 +96,8 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
     _viewModel.validateAll();
 
     var provider = _getPasswordProvider(authService);
-    await provider?.signIn(new Map<String, String>()
-      ..['email'] = _viewModel.email
-      ..['password'] = _viewModel.password);
+    await provider
+        ?.signIn({'email': _viewModel.email, 'password': _viewModel.password});
   }
 
   Widget _signInButton(AuthService authService) {
@@ -119,25 +120,17 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
                 child: Text('Forgot password'),
                 onPressed: super.showProgress
                     ? null
-                    : () {
-                        return showDialog(
-                            context: context,
-                            builder: (_) => new ScreenAwarePadding(
-                                child: new ForgotPassword(widget.authService)),
-                            barrierDismissible: false);
-                      }))
+                    : () async => await openDialog(
+                        context: context, builder: (_) => ForgotPassword())))
         : Container();
   }
 
   Widget _progressIndicator() {
     return super.showProgress
         ? Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(Colors.black45)),
-            ),
+            padding: EdgeInsets.all(16.0),
+            child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Colors.black45)),
           )
         : Container();
   }
@@ -220,12 +213,11 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
           ],
         ),
         backgroundColor: Colors.white,
-        body: ScopedModelDescendant<AppModel>(builder: (_, child, model) {
-          return TabletAwareLayoutBuilder(
-              mobileView:
-                  _asForm(_buildMobileForm(model.appInfo, model.authService)),
-              tabletView:
-                  _asForm(_buildTabletForm(model.appInfo, model.authService)));
-        }));
+        body: ScopedModelDescendant<AppModel>(
+            builder: (_, child, model) => TabletAwareLayoutBuilder(
+                mobileView:
+                    _asForm(_buildMobileForm(model.appInfo, model.authService)),
+                tabletView: _asForm(
+                    _buildTabletForm(model.appInfo, model.authService)))));
   }
 }

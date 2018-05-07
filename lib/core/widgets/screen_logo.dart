@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
 class ScreenLogo extends StatelessWidget {
-  ScreenLogo({@required this.imagePath});
+  ScreenLogo({Key key, @required this.imagePath}) : super(key: key);
 
   final String imagePath;
 

@@ -6,11 +6,12 @@ import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meta/meta.dart';
 
+import 'icon.dart';
 import '../../../common/actionable.dart';
 
 Future signInAction(AuthProvider provider, Actionable actionable) async {
   await actionable.performAction((BuildContext context) async {
-    await provider.signIn(new Map<String, String>());
+    await provider.signIn({});
   });
 }
 
@@ -30,7 +31,7 @@ class SignInButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(
-            FontAwesomeIcons.google,
+            providerIcon,
             color: Colors.white,
           ),
           Padding(

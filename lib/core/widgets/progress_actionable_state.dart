@@ -8,16 +8,20 @@ import '../common/app_exception.dart';
 import '../dialogs/show_error_dialog.dart';
 
 abstract class ProgressActionableState<T extends StatefulWidget>
-    extends ProgressableState<T> with Actionable {
+    extends ProgressableState<T> implements Actionable {
   Future performAction(FutureContextCallback action) async {
     setProgress(true);
     try {
       FocusScope.of(context).requestFocus(FocusNode());
       await action(context);
     } on AppException catch (error) {
+      setProgress(false);
+
       await showErrorDialog(context, error.message ?? 'Unknown error occured',
           showSigninSuggestion: error.signinSuggested);
     } catch (error) {
+      setProgress(false);
+
       await showErrorDialog(context, 'Unknown error occured');
     } finally {
       await new Future.delayed(const Duration(milliseconds: 500), () {

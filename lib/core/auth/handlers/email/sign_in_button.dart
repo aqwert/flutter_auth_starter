@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'signIn/sign_in_page.dart';
+import 'icon.dart';
 
 void signIn(BuildContext context) {
-  Navigator.of(context).pushNamed(SignInPassword.routeName);
+  Navigator.push(context, MaterialPageRoute(builder: (_) => SignInPassword()));
 }
 
 class SignInButton extends StatelessWidget {
@@ -17,7 +18,7 @@ class SignInButton extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(
-            Icons.email,
+            providerIcon,
             color: Colors.white,
           ),
           Padding(

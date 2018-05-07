@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import '../../../../widgets/form_progress_actionable_state.dart';
-
+import '../../../../app_model.dart';
 import 'change_password_view_model.dart';
 
 class ChangePassword extends StatefulWidget {
-  ChangePassword(this.authService);
+  //ChangePassword(this.authService);
 
-  final AuthService authService;
+  //final AuthService authService;
 
   @override
   createState() => new ChangePasswordState();
@@ -31,18 +32,18 @@ class ChangePasswordState extends FormProgressActionableState<ChangePassword> {
         orElse: () => null);
   }
 
-  Future _changeEmail() async {
-    var provider = _getPasswordProvider(widget.authService);
+  Future _changeEmail(AuthService authService) async {
+    var provider = _getPasswordProvider(authService);
 
     await provider?.changePassword({
       'currentPassword': _viewModel.currentPassword,
       'newPassword': _viewModel.newPassword
     });
 
-    Navigator.of(context).pop(true);
+    Navigator.pop(context);
   }
 
-  Widget _header() {
+  Widget _header(AuthService authService) {
     return AppBar(
         leading: CloseButton(),
         title: Text('Change Password'),
@@ -51,8 +52,8 @@ class ChangePasswordState extends FormProgressActionableState<ChangePassword> {
               icon: Icon(Icons.done),
               onPressed: super.showProgress
                   ? null
-                  : () => super
-                      .validateAndSubmit((_) async => await _changeEmail())),
+                  : () => super.validateAndSubmit(
+                      (_) async => await _changeEmail(authService))),
         ]);
   }
 
@@ -75,6 +76,8 @@ class ChangePasswordState extends FormProgressActionableState<ChangePassword> {
         Icons.lock,
       ),
       title: TextFormField(
+          enabled: !super.showProgress,
+          autocorrect: false,
           obscureText: true,
           decoration: InputDecoration(labelText: 'New Password'),
           validator: _viewModel.validatePassword,
@@ -88,6 +91,8 @@ class ChangePasswordState extends FormProgressActionableState<ChangePassword> {
         Icons.lock,
       ),
       title: TextFormField(
+          enabled: !super.showProgress,
+          autocorrect: false,
           obscureText: true,
           decoration: InputDecoration(labelText: 'Re-type New Password'),
           validator: _viewModel.validatePassword,
@@ -98,12 +103,9 @@ class ChangePasswordState extends FormProgressActionableState<ChangePassword> {
   Widget _progressIndicator() {
     return super.showProgress
         ? Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(Colors.black45)),
-            ),
+            padding: EdgeInsets.all(16.0),
+            child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(Colors.black45)),
           )
         : Container();
   }
@@ -133,10 +135,11 @@ class ChangePasswordState extends FormProgressActionableState<ChangePassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _header(),
-        body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: _asForm(_build())));
+    return ScopedModelDescendant<AppModel>(
+        builder: (_, child, model) => Scaffold(
+            appBar: _header(model.authService),
+            body: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: _asForm(_build()))));
   }
 }
