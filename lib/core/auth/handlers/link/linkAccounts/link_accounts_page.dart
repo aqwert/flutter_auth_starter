@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../../../app_model.dart';
 
@@ -121,26 +122,30 @@ class LinkAccountsState extends State<LinkAccounts> {
     print('BUILD Link accounts');
 
     FutureBuilder _loader;
-    //if (_loader == null) {
     _loader = FutureBuilder<ViewModel>(
         future: _viewModel.loadItems(authService),
         builder: (BuildContext context, AsyncSnapshot<ViewModel> snapshot) {
           return _handleSnapshot(context, snapshot);
         });
-    //}
     return _loader;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text('Accounts'),
-        ),
-        backgroundColor: Colors.white,
-        body: ScopedModelDescendant<AppModel>(
-            builder: (_, child, model) =>
-                SafeArea(child: _buildPage(model.authService))));
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
+        backgroundColor: Theme.of(context).primaryColor,
+        title: Text('Accounts'),
+      ),
+      body: ScopedModelDescendant<AppModel>(
+        rebuildOnChange: false,
+        builder: (_, child, model) => SafeArea(
+              child: Material(
+                color: isMaterial ? null : Theme.of(context).cardColor,
+                child: _buildPage(model.authService),
+              ),
+            ),
+      ),
+    );
   }
 }

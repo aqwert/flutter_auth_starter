@@ -2,10 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import 'close_account_view_model.dart';
 import '../../../../widgets/form_progress_actionable_state.dart';
 import '../../../../app_model.dart';
+import '../../../../widgets/modalAppBar.dart';
 
 class CloseAccount extends StatefulWidget {
   //CloseAccount(this.authService);
@@ -32,13 +34,6 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
     var user = await authService.currentUser();
     await authService
         .closeAccount({'email': user.email, 'password': _viewModel.password});
-  }
-
-  Widget _header() {
-    return AppBar(
-      leading: CloseButton(),
-      title: Text('Delete Account'),
-    );
   }
 
   Widget _passwordField() {
@@ -89,10 +84,23 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
   @override
   Widget build(BuildContext context) {
     return ScopedModelDescendant<AppModel>(
-        builder: (_, child, model) => Scaffold(
-            appBar: _header(),
+      rebuildOnChange: false,
+      builder: (_, child, model) => PlatformScaffold(
+            appBar: ModalAppBar(
+              title: Text('Delete Account'),
+              hideAccept: true,
+              closeAction: () => Navigator.maybePop(context),
+            ),
             body: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: _asForm(_build(model.authService)))));
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Material(
+                color: isMaterial ? null : Theme.of(context).cardColor,
+                child: _asForm(
+                  _build(model.authService),
+                ),
+              ),
+            ),
+          ),
+    );
   }
 }

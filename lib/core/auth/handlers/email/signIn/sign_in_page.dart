@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
-import 'package:meta/meta.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../../../common/dialog.dart';
 import '../../../../widgets/form_progress_actionable_state.dart';
@@ -11,9 +11,9 @@ import '../../../../widgets/tablet_aware_layout_builder.dart';
 import '../../../../app_info.dart';
 import '../../../../app_model.dart';
 
+import '../../../../widgets/header_button.dart';
 import '../../../../widgets/throttled_text_editing_controller.dart';
 import '../../../../widgets/email_image_circle_avatar.dart';
-import '../../../../widgets/screen_aware_padding.dart';
 
 import '../signUp/sign_up_page.dart';
 import '../forgotPassword/forgot_password_page.dart';
@@ -198,26 +198,24 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text('Login'),
-          actions: <Widget>[
-            FlatButton(
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(
-                      color: Theme.of(context).primaryTextTheme.title.color),
-                ),
-                onPressed: () => _signUp()),
-          ],
-        ),
-        backgroundColor: Colors.white,
-        body: ScopedModelDescendant<AppModel>(
-            builder: (_, child, model) => TabletAwareLayoutBuilder(
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
+        title: Text('Login'),
+        trailingActions: <Widget>[
+          HeaderButton(text: 'Sign Up', onPressed: () => _signUp()),
+        ],
+      ),
+      body: Material(
+        color: isMaterial ? null : Theme.of(context).cardColor, // Colors.white,
+        child: ScopedModelDescendant<AppModel>(
+          builder: (_, child, model) => TabletAwareLayoutBuilder(
                 mobileView:
                     _asForm(_buildMobileForm(model.appInfo, model.authService)),
-                tabletView: _asForm(
-                    _buildTabletForm(model.appInfo, model.authService)))));
+                tabletView:
+                    _asForm(_buildTabletForm(model.appInfo, model.authService)),
+              ),
+        ),
+      ),
+    );
   }
 }

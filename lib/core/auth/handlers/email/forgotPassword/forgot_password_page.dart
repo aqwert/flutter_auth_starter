@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+import '../../../../widgets/modalAppBar.dart';
 import '../../../../widgets/form_progress_actionable_state.dart';
 import '../../../../app_model.dart';
 
@@ -106,13 +108,23 @@ class ForgotPasswordState extends FormProgressActionableState<ForgotPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-            title: Text('Reset Password'),
-            leading: super.showProgress ? new Container() : new CloseButton()),
-        body: ScopedModelDescendant<AppModel>(
-            builder: (_, child, model) => Padding(
+    return PlatformScaffold(
+      appBar: ModalAppBar(
+        title: Text('Reset Password'),
+        hideAccept: true,
+        closeAction:
+            super.showProgress ? null : () => Navigator.maybePop(context),
+      ),
+      body: Material(
+        color: isMaterial ? null : Theme.of(context).cardColor,
+        child: ScopedModelDescendant<AppModel>(
+          rebuildOnChange: false,
+          builder: (_, child, model) => Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: _asForm(_buildForm(model.authService)))));
+                child: _asForm(_buildForm(model.authService)),
+              ),
+        ),
+      ),
+    );
   }
 }

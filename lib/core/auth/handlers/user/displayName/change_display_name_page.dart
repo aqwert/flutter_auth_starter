@@ -2,10 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import 'change_display_name_view_model.dart';
 import '../../../../widgets/form_progress_actionable_state.dart';
 import '../../../../app_model.dart';
+import '../../../../widgets/modalAppBar.dart';
 
 class ChangeDisplayName extends StatefulWidget {
   ChangeDisplayName({this.displayName});
@@ -33,20 +35,6 @@ class ChangeDisplayNameState
     await authService.setUserDisplayName(_viewModel.displayName);
 
     Navigator.pop(context);
-  }
-
-  Widget _header(AuthService authService) {
-    return AppBar(
-        leading: CloseButton(),
-        title: Text('Change Display Name'),
-        actions: <Widget>[
-          IconButton(
-              icon: new Icon(Icons.done),
-              onPressed: super.showProgress
-                  ? null
-                  : () => super.validateAndSubmit(
-                      (_) async => await _setDisplayName(authService))),
-        ]);
   }
 
   Widget _displayNameField() {
@@ -86,12 +74,29 @@ class ChangeDisplayNameState
 
   @override
   Widget build(BuildContext context) {
-    
     return ScopedModelDescendant<AppModel>(
-        builder: (_, child, model) => Scaffold(
-            appBar: _header(model.authService),
+      rebuildOnChange: false,
+      builder: (_, child, model) => PlatformScaffold(
+            appBar: ModalAppBar(
+              title: Text('Change Display Name'),
+              acceptAction: super.showProgress
+                  ? null
+                  : () => super.validateAndSubmit(
+                        (_) async => await _setDisplayName(model.authService),
+                      ),
+              closeAction:
+                  super.showProgress ? null : () => Navigator.maybePop(context),
+            ),
             body: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: _asForm(_build()))));
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Material(
+                color: isMaterial ? null : Theme.of(context).cardColor,
+                child: _asForm(
+                  _build(),
+                ),
+              ),
+            ),
+          ),
+    );
   }
 }

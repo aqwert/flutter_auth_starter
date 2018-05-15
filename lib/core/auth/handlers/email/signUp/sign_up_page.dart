@@ -4,8 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
-import 'package:meta/meta.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../../../widgets/form_progress_actionable_state.dart';
 import '../../../../widgets/tablet_aware_layout_builder.dart';
@@ -255,17 +255,22 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text('Create New Account'),
-        ),
-        backgroundColor: Colors.white,
-        body: ScopedModelDescendant<AppModel>(
-            builder: (_, child, model) => TabletAwareLayoutBuilder(
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
+        title: Text('Create New Account'),
+      ),
+      backgroundColor: Colors.white,
+      body: Material(
+        color: isMaterial ? null : Theme.of(context).cardColor,
+        child: ScopedModelDescendant<AppModel>(
+          builder: (_, child, model) => TabletAwareLayoutBuilder(
                 mobileView:
                     _asForm(_buildMobileForm(model.appInfo, model.authService)),
-                tabletView: _asForm(
-                    _buildTabletForm(model.appInfo, model.authService)))));
+                tabletView:
+                    _asForm(_buildTabletForm(model.appInfo, model.authService)),
+              ),
+        ),
+      ),
+    );
   }
 }
