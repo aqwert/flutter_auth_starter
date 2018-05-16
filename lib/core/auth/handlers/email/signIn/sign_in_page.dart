@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
-import 'package:meta/meta.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../../../common/dialog.dart';
 import '../../../../widgets/form_progress_actionable_state.dart';
@@ -11,9 +11,9 @@ import '../../../../widgets/tablet_aware_layout_builder.dart';
 import '../../../../app_info.dart';
 import '../../../../app_model.dart';
 
+import '../../../../widgets/header_button.dart';
 import '../../../../widgets/throttled_text_editing_controller.dart';
 import '../../../../widgets/email_image_circle_avatar.dart';
-import '../../../../widgets/screen_aware_padding.dart';
 
 import '../signUp/sign_up_page.dart';
 import '../forgotPassword/forgot_password_page.dart';
@@ -21,10 +21,6 @@ import '../forgotPassword/forgot_password_page.dart';
 import 'sign_in_view_model.dart';
 
 class SignInPassword extends StatefulWidget {
-  //static String routeName = '/signInPassword';
-
-  //SignInPassword({@required this.authService});
-  //final AuthService authService;
   @override
   createState() => new SignInPasswordState();
 }
@@ -103,7 +99,7 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
   Widget _signInButton(AuthService authService) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 32.0),
-      child: RaisedButton(
+      child: PlatformButton(
           child: Text('Sign In'),
           onPressed: super.showProgress
               ? null
@@ -129,55 +125,63 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
     return super.showProgress
         ? Padding(
             padding: EdgeInsets.all(16.0),
-            child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.black45)),
+            child: PlatformCircularProgressIndicator(
+              android: (_) => MaterialProgressIndicatorData(
+                    valueColor: AlwaysStoppedAnimation(Colors.black45),
+                  ),
+            ),
           )
         : Container();
   }
 
   Widget _buildMobileForm(AppInfo appInfo, AuthService authService) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: SingleChildScrollView(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _logoGravatar(appInfo, authService),
-                ],
-              ),
-              _emailField(),
-              _passwordField(),
-              _signInButton(authService),
-              _forgotPasswordButton(authService),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[_progressIndicator()],
-              ),
-            ])));
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _logoGravatar(appInfo, authService),
+              ],
+            ),
+            _emailField(),
+            _passwordField(),
+            _signInButton(authService),
+            _forgotPasswordButton(authService),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[_progressIndicator()],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildTabletForm(AppInfo appInfo, AuthService authService) {
     return Row(
       children: <Widget>[
         Expanded(
-            flex: 1,
-            child: Container(
-                color: Colors.white,
-                //elevation: 4.0,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    _logoGravatar(appInfo, authService),
-                    _progressIndicator()
-                  ],
-                ))),
+          flex: 1,
+          child: Container(
+            color: Colors.white,
+            //elevation: 4.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _logoGravatar(appInfo, authService),
+                _progressIndicator()
+              ],
+            ),
+          ),
+        ),
         Expanded(
-            flex: 1,
-            child: SingleChildScrollView(
-                child: Padding(
+          flex: 1,
+          child: SingleChildScrollView(
+            child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 36.0),
               child: Column(
                 children: <Widget>[
@@ -187,7 +191,9 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
                   _forgotPasswordButton(authService),
                 ],
               ),
-            ))),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -198,26 +204,26 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text('Login'),
-          actions: <Widget>[
-            FlatButton(
-                child: Text(
-                  'Sign Up',
-                  style: TextStyle(
-                      color: Theme.of(context).primaryTextTheme.title.color),
-                ),
-                onPressed: () => _signUp()),
-          ],
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
+        title: Text('Login'),
+        trailingActions: <Widget>[
+          HeaderButton(text: 'Sign Up', onPressed: () => _signUp()),
+        ],
+      ),
+      body: Material(
+        color: isMaterial ? null : Theme.of(context).cardColor, // Colors.white,
+        child: ScopedModelDescendant<AppModel>(
+          builder: (_, child, model) => TabletAwareLayoutBuilder(
+                mobileView: (_) => _asForm(
+                      _buildMobileForm(model.appInfo, model.authService),
+                    ),
+                tabletView: (_) => _asForm(
+                      _buildTabletForm(model.appInfo, model.authService),
+                    ),
+              ),
         ),
-        backgroundColor: Colors.white,
-        body: ScopedModelDescendant<AppModel>(
-            builder: (_, child, model) => TabletAwareLayoutBuilder(
-                mobileView:
-                    _asForm(_buildMobileForm(model.appInfo, model.authService)),
-                tabletView: _asForm(
-                    _buildTabletForm(model.appInfo, model.authService)))));
+      ),
+    );
   }
 }

@@ -13,6 +13,7 @@ dependencies:
   async_loader: "^0.1.1"
   font_awesome_flutter: 6.0.0
   url_launcher: "^3.0.0"
+  flutter_platform_widgets: "^0.2.0"
 
 dev_dependencies:
   flutter_test:
@@ -33,6 +34,7 @@ flutter:
   assets:
     - assets/icons/appIcon.jpg
     - assets/icons/transparent.png
+    - assets/icons/profileIcon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.io/assets-and-images/#resolution-aware.

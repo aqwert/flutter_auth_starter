@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:meta/meta.dart';
 
 import 'icon.dart';

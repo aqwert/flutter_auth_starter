@@ -17,8 +17,7 @@ abstract class ProgressActionableState<T extends StatefulWidget>
     } on AppException catch (error) {
       setProgress(false);
 
-      await showErrorDialog(context, error.message ?? 'Unknown error occured',
-          showSigninSuggestion: error.signinSuggested);
+      await showErrorDialog(context, error.message ?? 'Unknown error occured');
     } catch (error) {
       setProgress(false);
 

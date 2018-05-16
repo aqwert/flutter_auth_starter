@@ -4,8 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
-import 'package:meta/meta.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../../../widgets/form_progress_actionable_state.dart';
 import '../../../../widgets/tablet_aware_layout_builder.dart';
@@ -169,12 +169,14 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
   Widget _signUpButton(AuthService authService) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 32.0),
-      child: RaisedButton(
-          child: Text('Sign Up'),
-          onPressed: super.showProgress
-              ? null
-              : () => super.validateAndSubmit(
-                  (_) async => await _signUpWithEmailPassword(authService))),
+      child: PlatformButton(
+        child: Text('Sign Up'),
+        onPressed: super.showProgress
+            ? null
+            : () => super.validateAndSubmit(
+                  (_) async => await _signUpWithEmailPassword(authService),
+                ),
+      ),
     );
   }
 
@@ -182,57 +184,65 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
     return super.showProgress
         ? Padding(
             padding: EdgeInsets.all(16.0),
-            child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.black45)),
+            child: PlatformCircularProgressIndicator(
+              android: (_) => MaterialProgressIndicatorData(
+                    valueColor: AlwaysStoppedAnimation(Colors.black45),
+                  ),
+            ),
           )
         : Container();
   }
 
   Widget _buildMobileForm(AppInfo appInfo, AuthService authService) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: SingleChildScrollView(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _logoGravatar(appInfo, authService),
-                ],
-              ),
-              _displayNameField(),
-              _emailField(),
-              _passwordField(),
-              _passwordConfirmField(),
-              _termsAcceptance(appInfo),
-              _signUpButton(authService),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[_progressIndicator()],
-              ),
-            ])));
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _logoGravatar(appInfo, authService),
+              ],
+            ),
+            _displayNameField(),
+            _emailField(),
+            _passwordField(),
+            _passwordConfirmField(),
+            _termsAcceptance(appInfo),
+            _signUpButton(authService),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[_progressIndicator()],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildTabletForm(AppInfo appInfo, AuthService authService) {
     return Row(
       children: <Widget>[
         Expanded(
-            flex: 1,
-            child: Container(
-                color: Colors.white,
-                //elevation: 4.0,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    _logoGravatar(appInfo, authService),
-                    _progressIndicator()
-                  ],
-                ))),
+          flex: 1,
+          child: Container(
+            color: Colors.white,
+            //elevation: 4.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _logoGravatar(appInfo, authService),
+                _progressIndicator()
+              ],
+            ),
+          ),
+        ),
         Expanded(
-            flex: 1,
-            child: SingleChildScrollView(
-                child: Padding(
+          flex: 1,
+          child: SingleChildScrollView(
+            child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 36.0),
               child: Column(
                 children: <Widget>[
@@ -244,7 +254,9 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
                   _signUpButton(authService),
                 ],
               ),
-            ))),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -255,17 +267,24 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).primaryColor,
-          title: Text('Create New Account'),
+    return PlatformScaffold(
+      appBar: PlatformAppBar(
+        title: Text('Create New Account'),
+      ),
+      backgroundColor: Colors.white,
+      body: Material(
+        color: isMaterial ? null : Theme.of(context).cardColor,
+        child: ScopedModelDescendant<AppModel>(
+          builder: (_, child, model) => TabletAwareLayoutBuilder(
+                mobileView: (_) => _asForm(
+                      _buildMobileForm(model.appInfo, model.authService),
+                    ),
+                tabletView: (_) => _asForm(
+                      _buildTabletForm(model.appInfo, model.authService),
+                    ),
+              ),
         ),
-        backgroundColor: Colors.white,
-        body: ScopedModelDescendant<AppModel>(
-            builder: (_, child, model) => TabletAwareLayoutBuilder(
-                mobileView:
-                    _asForm(_buildMobileForm(model.appInfo, model.authService)),
-                tabletView: _asForm(
-                    _buildTabletForm(model.appInfo, model.authService)))));
+      ),
+    );
   }
 }

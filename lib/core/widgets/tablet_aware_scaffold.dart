@@ -9,10 +9,12 @@ class TabletAwareScaffold extends StatelessWidget {
       @required this.mobileView,
       @required this.tabletView,
       this.backgroundColor = Colors.white})
-      : super(key: key);
+      : assert(mobileView != null),
+        assert(tabletView != null),
+        super(key: key);
 
-  final Widget mobileView;
-  final Widget tabletView;
+  final WidgetBuilder mobileView;
+  final WidgetBuilder tabletView;
   final Color backgroundColor;
 
   @override

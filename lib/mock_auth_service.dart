@@ -10,7 +10,7 @@ AuthService createMockedAuthService() {
   authService.preAuthPhotoProvider = new GravatarProvider();
   authService.postAuthPhotoProvider = new CombinedPhotoProvider()
     ..add(new AuthUserImageProvider(service: authService))
-    ..add(new GravatarProvider(missingImageType: ImageType.Identicon));
+    ..add(new GravatarProvider(missingImageType: ImageType.MysteryMan));
 
   return authService;
 }

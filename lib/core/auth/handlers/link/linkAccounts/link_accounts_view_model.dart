@@ -42,7 +42,7 @@ class ViewModel {
             isActive: false,
             providerName: linkProv.providerName,
             linkableProvider: linkProv,
-            title: 'Add ${linkProv.providerDisplayName} Account'));
+            title: 'Connect ${linkProv.providerDisplayName}'));
       }
     }
 

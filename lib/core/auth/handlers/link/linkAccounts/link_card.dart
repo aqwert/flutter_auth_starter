@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:meta/meta.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../../../common/actionable.dart';
 import '../../../../widgets/progress_actionable_state.dart';
@@ -27,52 +28,39 @@ class LinkCardState extends ProgressActionableState<LinkCard> {
     super.initState();
   }
 
-  // @override
-  // Future<Null> doSubmit({options}) async {
-  //   var action = linkActions[widget.providerName];
-  //   if (action != null) {
-  //     await action(context, widget.linkableProvider);
-  //   }
-  // }
-
-  // Future doLink(BuildContext context) async {
-  //   await widget.linkableProvider.linkAccount({});
-  // }
-
   bool isEmpty(String str) {
     return str == null || str.length == 0;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        child: Padding(
-      padding: EdgeInsets.all(0.0),
-      child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
+    var theme = Theme.of(context);
+    return Column(
+      children: <Widget>[
         ListTile(
           leading: Icon(widget.icon),
-          title: isEmpty(widget.title) ? null : Text(widget.title),
-          subtitle: isEmpty(widget.subTitle) ? null : Text(widget.subTitle),
+          title: isEmpty(widget.title)
+              ? null
+              : Text(widget.title, style: theme.textTheme.body1),
+          subtitle: isEmpty(widget.subTitle)
+              ? null
+              : Text(widget.subTitle, style: theme.textTheme.caption),
           trailing: super.showProgress
               ? Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: CircularProgressIndicator(),
+                  child: PlatformCircularProgressIndicator(),
                 )
-              : null,
+              : PlatformButton(
+                  onPressed: super.showProgress
+                      ? null
+                      : () async {
+                          await super.performAction(widget.linkAction);
+                        },
+                  child: Text('Connect'),
+                ),
         ),
-        ButtonTheme.bar(
-            child: ButtonBar(
-          children: <Widget>[
-            FlatButton(
-                child: Text((super.showProgress ? 'ADDING' : 'ADD')),
-                onPressed: super.showProgress
-                    ? null
-                    : () async {
-                        await super.performAction(widget.linkAction);
-                      }),
-          ],
-        ))
-      ]),
-    ));
+        Divider(),
+      ],
+    );
   }
 }
