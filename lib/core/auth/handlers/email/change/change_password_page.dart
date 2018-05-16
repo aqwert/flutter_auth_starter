@@ -10,10 +10,6 @@ import 'change_password_view_model.dart';
 import '../../../../widgets/modalAppBar.dart';
 
 class ChangePassword extends StatefulWidget {
-  //ChangePassword(this.authService);
-
-  //final AuthService authService;
-
   @override
   createState() => new ChangePasswordState();
 }

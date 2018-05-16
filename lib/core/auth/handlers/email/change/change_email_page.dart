@@ -85,20 +85,23 @@ class ChangeEmailState extends FormProgressActionableState<ChangeEmail> {
 
   Widget _build() {
     return SingleChildScrollView(
-        child: Column(children: <Widget>[
-      Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Text(
-            'Please enter you current password to change your primary email address'),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+                'Please enter you current password to change your primary email address'),
+          ),
+          _passwordField(),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 8.0),
+            child: Divider(),
+          ),
+          _emailField(),
+          _progressIndicator(),
+        ],
       ),
-      _passwordField(),
-      Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.0),
-        child: Divider(),
-      ),
-      _emailField(),
-      _progressIndicator(),
-    ]));
+    );
   }
 
   Form _asForm(Widget widget) {

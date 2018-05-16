@@ -21,10 +21,6 @@ import '../forgotPassword/forgot_password_page.dart';
 import 'sign_in_view_model.dart';
 
 class SignInPassword extends StatefulWidget {
-  //static String routeName = '/signInPassword';
-
-  //SignInPassword({@required this.authService});
-  //final AuthService authService;
   @override
   createState() => new SignInPasswordState();
 }

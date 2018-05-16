@@ -63,16 +63,6 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
         message:
             'Are you sure you want to delete your account? This cannot be undone.',
         context: context));
-
-    // showOkCancelDialog(
-    //     () => super.validateAndSubmit(
-    //           (_) async => await _closeAccount(authService),
-    //         ),
-    //     () => Navigator.pop(context),
-    //     caption: 'Confirm',
-    //     message:
-    //         'Are you sure you want to delete your account? This cannot be undone.',
-    //     context: context);
   }
 
   Widget _build(AuthService authService) {

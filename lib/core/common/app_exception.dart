@@ -1,8 +1,7 @@
 class AppException implements Exception {
-  AppException(this.message, {this.signinSuggested});
+  AppException(this.message);
 
   final String message;
-  final bool signinSuggested;
 
   @override
   String toString() {
