@@ -38,15 +38,21 @@ class LinkAccountsState extends State<LinkAccounts> {
 
   Widget _buildActiveCard({ViewModelItem viewModel, IconData icon}) {
     var theme = Theme.of(context);
-    return Card(
-      child: Column(mainAxisSize: MainAxisSize.max, children: <Widget>[
+    return Column(
+      children: <Widget>[
         ListTile(
-            leading: Icon(icon),
-            title: Text(viewModel.title),
-            subtitle:
-                (isEmpty(viewModel.subTitle) ? null : Text(viewModel.subTitle)),
-            trailing: Text('Active', style: theme.textTheme.body2))
-      ]),
+          leading: Icon(icon),
+          title: Text(viewModel.title),
+          subtitle: (isEmpty(viewModel.subTitle)
+              ? null
+              : Text(
+                  viewModel.subTitle,
+                  style: theme.textTheme.body1,
+                )),
+          trailing: Text('Connected', style: theme.textTheme.body2),
+        ),
+        Divider(),
+      ],
     );
   }
 
@@ -54,13 +60,15 @@ class LinkAccountsState extends State<LinkAccounts> {
     switch (viewModel.providerName) {
       case 'password':
         return LinkCard(
-            icon: email.providerIcon,
-            title: viewModel.title,
-            subTitle: viewModel.subTitle,
-            linkAction: (context) async => await openDialog(
+          icon: email.providerIcon,
+          title: viewModel.title,
+          subTitle: viewModel.subTitle,
+          linkAction: (context) async => await openDialog(
                 context: context,
                 builder: (_) =>
-                    email.LinkEmailAccount(viewModel.linkableProvider)));
+                    email.LinkEmailAccount(viewModel.linkableProvider),
+              ),
+        );
       case 'google':
         return LinkCard(
           icon: google.providerIcon,
@@ -74,27 +82,35 @@ class LinkAccountsState extends State<LinkAccounts> {
 
   Widget _handleCompleted(ViewModel viewModel) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text('Access the same data with multiple accounts.'),
+        Material(
+          color: isMaterial ? null : Theme.of(context).cardColor,
+          elevation: isMaterial ? 4.0 : 0.5,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Access the same data with multiple accounts.',
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
         Expanded(
-            child: ListView.builder(
-          padding: EdgeInsets.all(8.0),
-          //itemExtent: 20.0,
-          itemCount: viewModel.items.length,
-          itemBuilder: (BuildContext context, int index) {
-            var vm = viewModel.items.elementAt(index);
-            if (vm.isActive) {
-              return _buildActiveCard(
-                  viewModel: vm, icon: _icons[vm.providerName]);
-            } else {
-              return _buildLinkableCard(
-                  viewModel: vm, icon: _icons[vm.providerName]);
-            }
-          },
-        )),
+          child: ListView.builder(
+            padding: EdgeInsets.all(0.0),
+            itemCount: viewModel.items.length,
+            itemBuilder: (BuildContext context, int index) {
+              var vm = viewModel.items.elementAt(index);
+              if (vm.isActive) {
+                return _buildActiveCard(
+                    viewModel: vm, icon: _icons[vm.providerName]);
+              } else {
+                return _buildLinkableCard(
+                    viewModel: vm, icon: _icons[vm.providerName]);
+              }
+            },
+          ),
+        ),
       ],
     );
   }
@@ -112,21 +128,19 @@ class LinkAccountsState extends State<LinkAccounts> {
     } else {
       return Padding(
         padding: const EdgeInsets.all(16.0),
-        child: CircularProgressIndicator(),
+        child: PlatformCircularProgressIndicator(),
       );
     }
   }
 
-  //FutureBuilder _loader;
   Widget _buildPage(AuthService authService) {
-    print('BUILD Link accounts');
-
     FutureBuilder _loader;
     _loader = FutureBuilder<ViewModel>(
-        future: _viewModel.loadItems(authService),
-        builder: (BuildContext context, AsyncSnapshot<ViewModel> snapshot) {
-          return _handleSnapshot(context, snapshot);
-        });
+      future: _viewModel.loadItems(authService),
+      builder: (BuildContext context, AsyncSnapshot<ViewModel> snapshot) {
+        return _handleSnapshot(context, snapshot);
+      },
+    );
     return _loader;
   }
 
@@ -134,16 +148,13 @@ class LinkAccountsState extends State<LinkAccounts> {
   Widget build(BuildContext context) {
     return PlatformScaffold(
       appBar: PlatformAppBar(
-        backgroundColor: Theme.of(context).primaryColor,
         title: Text('Accounts'),
       ),
       body: ScopedModelDescendant<AppModel>(
-        rebuildOnChange: false,
-        builder: (_, child, model) => SafeArea(
-              child: Material(
-                color: isMaterial ? null : Theme.of(context).cardColor,
-                child: _buildPage(model.authService),
-              ),
+        //rebuildOnChange: false,
+        builder: (_, child, model) => Material(
+              color: isMaterial ? null : Theme.of(context).cardColor,
+              child: _buildPage(model.authService),
             ),
       ),
     );

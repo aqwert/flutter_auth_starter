@@ -92,8 +92,11 @@ class ChangePasswordState extends FormProgressActionableState<ChangePassword> {
     return super.showProgress
         ? Padding(
             padding: EdgeInsets.all(16.0),
-            child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.black45)),
+            child: PlatformCircularProgressIndicator(
+              android: (_) => MaterialProgressIndicatorData(
+                    valueColor: AlwaysStoppedAnimation(Colors.black45),
+                  ),
+            ),
           )
         : Container();
   }
@@ -128,6 +131,7 @@ class ChangePasswordState extends FormProgressActionableState<ChangePassword> {
       builder: (_, child, model) => PlatformScaffold(
             appBar: ModalAppBar(
               title: Text('Change Passwrord'),
+              acceptText: 'Apply',
               acceptAction: super.showProgress
                   ? null
                   : () => super.validateAndSubmit(

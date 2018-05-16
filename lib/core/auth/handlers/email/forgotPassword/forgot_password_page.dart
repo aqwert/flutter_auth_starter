@@ -58,7 +58,7 @@ class ForgotPasswordState extends FormProgressActionableState<ForgotPassword> {
   Widget _forgotButton(AuthService authService) {
     return Padding(
       padding: EdgeInsets.all(32.0),
-      child: RaisedButton(
+      child: PlatformButton(
           child: Text('Send Email'),
           onPressed: super.showProgress
               ? null
@@ -71,8 +71,11 @@ class ForgotPasswordState extends FormProgressActionableState<ForgotPassword> {
     return super.showProgress
         ? Padding(
             padding: EdgeInsets.all(16.0),
-            child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.black45)),
+            child: PlatformCircularProgressIndicator(
+              android: (_) => MaterialProgressIndicatorData(
+                    valueColor: AlwaysStoppedAnimation(Colors.black45),
+                  ),
+            ),
           )
         : Container();
   }

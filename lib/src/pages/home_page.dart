@@ -22,7 +22,7 @@ class HomePageState extends State<HomePage> {
             Text('Home page'),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: RaisedButton(
+              child: PlatformButton(
                 child: Text('Sign Out'),
                 onPressed: () async => await model.authService.signOut(),
               ),
@@ -72,16 +72,6 @@ class HomePageState extends State<HomePage> {
                             builder: (_) => Material(
                                   child: ProfilePage(),
                                 ),
-                            // PlatformScaffold(
-                            //       appBar: PlatformAppBar(
-                            //         backgroundColor:
-                            //             Theme.of(context).primaryColorLight,
-                            //         title: Text(''),
-                            //       ),
-                            //       body: Material(
-                            //         child: ProfilePage(),
-                            //       ),
-                            //     ),
                           ),
                         ),
                   ),

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 import 'package:flutter/material.dart';
 
 Future<Null> showErrorDialog(BuildContext context, String message,
@@ -8,7 +9,7 @@ Future<Null> showErrorDialog(BuildContext context, String message,
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
-      return AlertDialog(
+      return PlatformAlertDialog(
         title: Text('Oops'),
         content: SingleChildScrollView(
           child: ListBody(
@@ -21,7 +22,7 @@ Future<Null> showErrorDialog(BuildContext context, String message,
           ),
         ),
         actions: <Widget>[
-          FlatButton(
+          PlatformDialogAction(
             child: Text('OK'),
             onPressed: () {
               Navigator.pop(context);

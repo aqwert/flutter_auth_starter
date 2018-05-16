@@ -11,10 +11,6 @@ import '../icon.dart';
 import '../../../../widgets/modalAppBar.dart';
 
 class ChangeEmail extends StatefulWidget {
-  //ChangeEmail(this.authService);
-
-  //final AuthService authService;
-
   @override
   createState() => new ChangeEmailState();
 }
@@ -78,8 +74,11 @@ class ChangeEmailState extends FormProgressActionableState<ChangeEmail> {
     return super.showProgress
         ? Padding(
             padding: EdgeInsets.all(16.0),
-            child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.black45)),
+            child: PlatformCircularProgressIndicator(
+              android: (_) => MaterialProgressIndicatorData(
+                    valueColor: AlwaysStoppedAnimation(Colors.black45),
+                  ),
+            ),
           )
         : Container();
   }
@@ -113,6 +112,7 @@ class ChangeEmailState extends FormProgressActionableState<ChangeEmail> {
       builder: (_, child, model) => PlatformScaffold(
             appBar: ModalAppBar(
               title: Text('Change Email'),
+              acceptText: 'Apply',
               acceptAction: super.showProgress
                   ? null
                   : () => super.validateAndSubmit(

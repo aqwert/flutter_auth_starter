@@ -4,6 +4,7 @@ import 'package:async_loader/async_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../widgets/tablet_aware_scaffold.dart';
 import '../widgets/screen_logo.dart';
@@ -76,8 +77,11 @@ class SplashState extends ProgressActionableState<Splash> {
   Widget _progressIndicator() {
     return Padding(
       padding: EdgeInsets.all(16.0),
-      child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation(Colors.black45)),
+      child: PlatformCircularProgressIndicator(
+        android: (_) => MaterialProgressIndicatorData(
+              valueColor: AlwaysStoppedAnimation(Colors.black45),
+            ),
+      ),
     );
   }
 
@@ -178,9 +182,9 @@ class SplashState extends ProgressActionableState<Splash> {
                   ],
                 ))),
         Expanded(
-            flex: 1,
-            child: SingleChildScrollView(
-                child: Padding(
+          flex: 1,
+          child: SingleChildScrollView(
+            child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 36.0),
               child: Column(
                 children: <Widget>[
@@ -190,23 +194,28 @@ class SplashState extends ProgressActionableState<Splash> {
                   )
                 ],
               ),
-            ))),
+            ),
+          ),
+        ),
       ],
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModelDescendant<AppModel>(builder: (_, child, model) {
-      //var theme = Theme.of(context);
-      Color bgColor = Colors.white;
-      Color fgColor = Colors.black87;
+    return ScopedModelDescendant<AppModel>(
+      builder: (_, child, model) {
+        //var theme = Theme.of(context);
+        Color bgColor = Colors.white;
+        Color fgColor = Colors.black87;
 
-      return TabletAwareScaffold(
-          mobileView: _buildMobileView(model.appInfo, _loader, fgColor),
-          tabletView:
-              _buildTabletView(model.appInfo, _loader, bgColor, fgColor),
-          backgroundColor: bgColor);
-    });
+        return TabletAwareScaffold(
+            mobileView: (_) =>
+                _buildMobileView(model.appInfo, _loader, fgColor),
+            tabletView: (_) =>
+                _buildTabletView(model.appInfo, _loader, bgColor, fgColor),
+            backgroundColor: bgColor);
+      },
+    );
   }
 }

@@ -103,7 +103,7 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
   Widget _signInButton(AuthService authService) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 32.0),
-      child: RaisedButton(
+      child: PlatformButton(
           child: Text('Sign In'),
           onPressed: super.showProgress
               ? null
@@ -129,55 +129,63 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
     return super.showProgress
         ? Padding(
             padding: EdgeInsets.all(16.0),
-            child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.black45)),
+            child: PlatformCircularProgressIndicator(
+              android: (_) => MaterialProgressIndicatorData(
+                    valueColor: AlwaysStoppedAnimation(Colors.black45),
+                  ),
+            ),
           )
         : Container();
   }
 
   Widget _buildMobileForm(AppInfo appInfo, AuthService authService) {
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: SingleChildScrollView(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  _logoGravatar(appInfo, authService),
-                ],
-              ),
-              _emailField(),
-              _passwordField(),
-              _signInButton(authService),
-              _forgotPasswordButton(authService),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[_progressIndicator()],
-              ),
-            ])));
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _logoGravatar(appInfo, authService),
+              ],
+            ),
+            _emailField(),
+            _passwordField(),
+            _signInButton(authService),
+            _forgotPasswordButton(authService),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[_progressIndicator()],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget _buildTabletForm(AppInfo appInfo, AuthService authService) {
     return Row(
       children: <Widget>[
         Expanded(
-            flex: 1,
-            child: Container(
-                color: Colors.white,
-                //elevation: 4.0,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    _logoGravatar(appInfo, authService),
-                    _progressIndicator()
-                  ],
-                ))),
+          flex: 1,
+          child: Container(
+            color: Colors.white,
+            //elevation: 4.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                _logoGravatar(appInfo, authService),
+                _progressIndicator()
+              ],
+            ),
+          ),
+        ),
         Expanded(
-            flex: 1,
-            child: SingleChildScrollView(
-                child: Padding(
+          flex: 1,
+          child: SingleChildScrollView(
+            child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 36.0),
               child: Column(
                 children: <Widget>[
@@ -187,7 +195,9 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
                   _forgotPasswordButton(authService),
                 ],
               ),
-            ))),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -209,10 +219,12 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
         color: isMaterial ? null : Theme.of(context).cardColor, // Colors.white,
         child: ScopedModelDescendant<AppModel>(
           builder: (_, child, model) => TabletAwareLayoutBuilder(
-                mobileView:
-                    _asForm(_buildMobileForm(model.appInfo, model.authService)),
-                tabletView:
-                    _asForm(_buildTabletForm(model.appInfo, model.authService)),
+                mobileView: (_) => _asForm(
+                      _buildMobileForm(model.appInfo, model.authService),
+                    ),
+                tabletView: (_) => _asForm(
+                      _buildTabletForm(model.appInfo, model.authService),
+                    ),
               ),
         ),
       ),

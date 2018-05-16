@@ -3,11 +3,13 @@ import 'package:meta/meta.dart';
 
 class TabletAwareLayoutBuilder extends StatelessWidget {
   TabletAwareLayoutBuilder(
-      {Key key, @required this.mobileView, this.tabletView})
-      : super(key: key);
+      {Key key, @required this.mobileView, @required this.tabletView})
+      : assert(mobileView != null),
+        assert(tabletView != null),
+        super(key: key);
 
-  final Widget mobileView;
-  final Widget tabletView;
+  final WidgetBuilder mobileView;
+  final WidgetBuilder tabletView;
 
   final double tabletThreshold = 660.0;
 
@@ -17,9 +19,9 @@ class TabletAwareLayoutBuilder extends StatelessWidget {
       final bool useMobileLayout = constraints.maxWidth < tabletThreshold;
 
       if (useMobileLayout) {
-        return mobileView;
+        return mobileView(context);
       } else {
-        return tabletView;
+        return tabletView(context);
       }
     });
   }

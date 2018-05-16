@@ -15,7 +15,7 @@ void main() {
       appName: 'Flutter Auth Starter',
       appVersion: "0.0.1",
       appIconPath: "assets/icons/appIcon.jpg",
-      avatarDefaultAppIconPath: "assets/icons/transparent.png",
+      avatarDefaultAppIconPath: "assets/icons/profileIcon.png",
       applicationLegalese: '',
       privacyPolicyUrl: "http://yourPrivacyPolicyUrl",
       termsOfServiceUrl: "http://yourTermsOfServiceUrl");

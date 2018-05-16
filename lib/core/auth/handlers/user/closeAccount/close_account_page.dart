@@ -8,12 +8,9 @@ import 'close_account_view_model.dart';
 import '../../../../widgets/form_progress_actionable_state.dart';
 import '../../../../app_model.dart';
 import '../../../../widgets/modalAppBar.dart';
+import '../../../../dialogs/show_ok_cancel_dialog.dart';
 
 class CloseAccount extends StatefulWidget {
-  //CloseAccount(this.authService);
-
-  //final AuthService authService;
-
   @override
   createState() => new CloseAccountState();
 }
@@ -50,10 +47,32 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
     return super.showProgress
         ? Padding(
             padding: EdgeInsets.all(16.0),
-            child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.black45)),
+            child: PlatformCircularProgressIndicator(
+              android: (_) => MaterialProgressIndicatorData(
+                    valueColor: AlwaysStoppedAnimation(Colors.black45),
+                  ),
+            ),
           )
         : Container();
+  }
+
+  void _confirmAndActionClosingAccount(AuthService authService) {
+    super.validateAndSubmit((_) async => await showOkCancelDialog(
+        () => _closeAccount(authService), () => Navigator.pop(context),
+        caption: 'Confirm',
+        message:
+            'Are you sure you want to delete your account? This cannot be undone.',
+        context: context));
+
+    // showOkCancelDialog(
+    //     () => super.validateAndSubmit(
+    //           (_) async => await _closeAccount(authService),
+    //         ),
+    //     () => Navigator.pop(context),
+    //     caption: 'Confirm',
+    //     message:
+    //         'Are you sure you want to delete your account? This cannot be undone.',
+    //     context: context);
   }
 
   Widget _build(AuthService authService) {
@@ -66,12 +85,11 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
       _passwordField(),
       Padding(
         padding: const EdgeInsets.all(32.0),
-        child: RaisedButton(
-            child: Text('Close Account'),
+        child: PlatformButton(
+            child: Text('Close and Delete Account'),
             onPressed: super.showProgress
                 ? null
-                : () => super.validateAndSubmit(
-                    (_) async => await _closeAccount(authService))),
+                : () => _confirmAndActionClosingAccount(authService)),
       ),
       _progressIndicator(),
     ]));

@@ -1,9 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_auth_base/flutter_auth_base.dart';
+import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
 import '../../../../widgets/form_progress_actionable_state.dart';
 import 'link_account_view_model.dart';
+
+import '../../../../widgets/modalAppBar.dart';
 
 class LinkEmailAccount extends StatefulWidget {
   LinkEmailAccount(this.linkProvider);
@@ -35,7 +38,7 @@ class LinkEmailAccountState
   Widget _linkButton() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 32.0),
-      child: RaisedButton(
+      child: PlatformButton(
           child: Text('Sign In'),
           onPressed: super.showProgress
               ? null
@@ -80,8 +83,11 @@ class LinkEmailAccountState
     return super.showProgress
         ? Padding(
             padding: EdgeInsets.all(16.0),
-            child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation(Colors.black45)),
+            child: PlatformCircularProgressIndicator(
+              android: (_) => MaterialProgressIndicatorData(
+                    valueColor: AlwaysStoppedAnimation(Colors.black45),
+                  ),
+            ),
           )
         : Container();
   }
@@ -105,11 +111,19 @@ class LinkEmailAccountState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          leading: CloseButton(),
-          title: Text('Link Email Account'),
+    return PlatformScaffold(
+      appBar: ModalAppBar(
+        hideAccept: true,
+        closeAction:
+            super.showProgress ? null : () => Navigator.maybePop(context),
+        title: Text('Link Email Account'),
+      ),
+      body: Material(
+        color: isMaterial ? null : Theme.of(context).cardColor,
+        child: _asForm(
+          _buildPage(),
         ),
-        body: _asForm(_buildPage()));
+      ),
+    );
   }
 }

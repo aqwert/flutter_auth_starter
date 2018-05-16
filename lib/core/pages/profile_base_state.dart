@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../app_info.dart';
 import '../auth/handlers/link/linkAccounts/link_accounts_page.dart';
 import '../auth/handlers/email/change/change_email_page.dart';
+import '../auth/handlers/email/change/change_password_page.dart';
 import '../auth/handlers/user/displayName/change_display_name_page.dart';
 import '../auth/handlers/user/closeAccount/close_account_page.dart';
 import '../common/dialog.dart';
@@ -37,6 +38,7 @@ abstract class ProfileBaseState<T extends StatefulWidget> extends State<T> {
       children: <Widget>[
         _displayNameItem(authService, userInfo),
         _changeEmailItem(authService, userInfo),
+        _changePasswordItem(authService, userInfo),
         _accountsItem(authService),
         _closeAccountItem(authService),
       ],
@@ -203,6 +205,22 @@ abstract class ProfileBaseState<T extends StatefulWidget> extends State<T> {
             show: authService.options.canLinkAccounts),
         authService.options.canLinkAccounts ? Divider() : Container(),
       ],
+    );
+  }
+
+  bool _canChangePassword(AuthService authService, AuthUser userInfo) {
+    if (userInfo.providerAccounts.any((prov) => prov.canChangePassword)) {
+      return authService.options.canChangePassword;
+    }
+    return false;
+  }
+
+  Widget _changePasswordItem(AuthService authService, AuthUser userInfo) {
+    return listItem(
+      'Change Password',
+      () async =>
+          await openDialog(context: context, builder: (_) => ChangePassword()),
+      show: _canChangePassword(authService, userInfo),
     );
   }
 

@@ -73,6 +73,7 @@ class EmailImageCircleAvatarState extends State<EmailImageCircleAvatar> {
         _image = new NetworkImage(_gravatarImageUrl);
       }
     }
+
     return _image;
   }
 

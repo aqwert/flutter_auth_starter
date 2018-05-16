@@ -10,6 +10,7 @@ class ModalAppBar extends PlatformAppBar {
     @required Widget title,
     @required VoidCallback closeAction,
     bool hideAccept: false,
+    String acceptText: 'Save',
     VoidCallback acceptAction,
     Color backgroundColor,
     PlatformBuilder<MaterialAppBarData> android,
@@ -19,11 +20,12 @@ class ModalAppBar extends PlatformAppBar {
             title: title,
             backgroundColor: backgroundColor,
             leading: _closeButton(closeAction),
-            trailingActions: hideAccept ? [] : [_acceptButton(acceptAction)],
+            trailingActions:
+                hideAccept ? [] : [_acceptButton(acceptText, acceptAction)],
             android: android,
             ios: ios);
 
-  static Widget _acceptButton(VoidCallback acceptAction) {
+  static Widget _acceptButton(String acceptText, VoidCallback acceptAction) {
     return PlatformWidget(
       android: (_) => PlatformIconButton(
             androidIcon: Icon(Icons.done),
@@ -31,7 +33,7 @@ class ModalAppBar extends PlatformAppBar {
           ),
       ios: (_) => PlatformButton(
             child: Text(
-              'Save',
+              acceptText,
             ),
             onPressed: acceptAction,
           ),
