@@ -29,14 +29,21 @@ class SignInButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(
-            providerIcon,
-            color: color,
+          Container(
+            alignment: Alignment.centerRight,
+            width: 70.0,
+            child: Icon(
+              providerIcon,
+              color: color,
+            ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text('Email Sign in', style: TextStyle(color: color)),
-          )
+          Expanded(
+            child: new Center(
+                child: Text('Email Sign in', style: TextStyle(color: color))),
+          ),
+          Container(
+            width: 70.0,
+          ),
         ],
       ),
     );

@@ -23,15 +23,22 @@ class SignInButton extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(
-            providerIcon,
-            color: Colors.white,
+          Container(
+            alignment: Alignment.centerRight,
+            width: 70.0,
+            child: Icon(
+              providerIcon,
+              color: Colors.white,
+            ),
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child:
-                Text('Google Sign in', style: TextStyle(color: Colors.white)),
-          )
+          Expanded(
+            child: new Center(
+                child: Text('Google Sign in',
+                    style: TextStyle(color: Colors.white))),
+          ),
+          Container(
+            width: 70.0,
+          ),
         ],
       ),
     );
