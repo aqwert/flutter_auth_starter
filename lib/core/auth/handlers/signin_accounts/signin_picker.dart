@@ -29,12 +29,12 @@ class SignInPickerState extends ProgressActionableState<SignInPicker> {
     var buttons =
         widget.authProviders.map((prov) => _getProviderButton(prov)).toList();
 
-    return new Column(
+    return Column(
       mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
         super.showProgress
-            ? new Padding(
+            ? Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: PlatformCircularProgressIndicator(),
               )

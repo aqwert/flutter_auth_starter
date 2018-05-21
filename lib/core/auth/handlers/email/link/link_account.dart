@@ -97,12 +97,7 @@ class LinkEmailAccountState
     return super.showProgress
         ? Padding(
             padding: EdgeInsets.all(16.0),
-            child: PlatformCircularProgressIndicator(
-              android: (_) => MaterialProgressIndicatorData(
-                    valueColor: AlwaysStoppedAnimation(Colors.black45),
-                  ),
-            ),
-          )
+            child: PlatformCircularProgressIndicator())
         : Container();
   }
 

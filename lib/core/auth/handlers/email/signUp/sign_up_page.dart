@@ -167,11 +167,15 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
   }
 
   Widget _signUpButton(AuthService authService) {
+    final ThemeData themeData = Theme.of(context);
+    final bool isDark = Brightness.dark == themeData.primaryColorBrightness;
+
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 32.0),
       child: PlatformButton(
         android: (_) => MaterialRaisedButtonData(
-            textColor: Colors.white, color: Theme.of(context).primaryColor),
+            textColor: isDark ? Colors.white : Colors.black87,
+            color: Theme.of(context).primaryColor),
         ios: (_) => CupertinoButtonData(color: Theme.of(context).primaryColor),
         child: Text('Sign Up'),
         onPressed: super.showProgress
@@ -187,12 +191,7 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
     return super.showProgress
         ? Padding(
             padding: EdgeInsets.all(16.0),
-            child: PlatformCircularProgressIndicator(
-              android: (_) => MaterialProgressIndicatorData(
-                    valueColor: AlwaysStoppedAnimation(Colors.black45),
-                  ),
-            ),
-          )
+            child: PlatformCircularProgressIndicator())
         : Container();
   }
 

@@ -18,7 +18,10 @@ class SignInButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    final ThemeData theme = Theme.of(context);
+    final bool isDark = Brightness.dark == theme.primaryColorBrightness;
+    var color = isDark ? Colors.white : Colors.black87;
+
     return RaisedButton(
       color: theme.primaryColor,
       padding: EdgeInsets.all(8.0),
@@ -28,11 +31,11 @@ class SignInButton extends StatelessWidget {
         children: <Widget>[
           Icon(
             providerIcon,
-            color: Colors.white,
+            color: color,
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text('Email Sign in', style: TextStyle(color: Colors.white)),
+            child: Text('Email Sign in', style: TextStyle(color: color)),
           )
         ],
       ),
