@@ -1,3 +1,5 @@
+import 'package:flutter_auth_base/flutter_auth_base.dart';
+
 import '../../../../validators/validator.dart';
 import '../../../../validators/email_validator.dart' as emailValidator;
 import '../../../../validators/password_validator.dart' as passwordValidator;
@@ -6,7 +8,7 @@ import '../../../../common/app_exception.dart';
 import '../../../../validators/validate_if.dart';
 
 class ViewModel {
-  ViewModel({this.email, this.password}) {
+  ViewModel() {
     _validator = new Validator();
     _validator.validations.add(() => validateEmail(email));
     _validator.validations.add(() => validatePassword(password));
@@ -16,6 +18,7 @@ class ViewModel {
   // the submit button clicked and the field is empty
   bool emptyTextValidation = false;
 
+  String currentEmail = '';
   String email = '';
   String password = '';
 
@@ -32,5 +35,10 @@ class ViewModel {
     if (errors != null && errors.length > 0) {
       throw new AppException(errors);
     }
+  }
+
+  void init(AuthService authService) async {
+    var user = await authService.currentUser();
+    currentEmail = user.email;
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import '../../../../common/actionable.dart';
+import '../../../../common/future_action_callback.dart';
 import '../../../../widgets/progress_actionable_state.dart';
 
 class LinkCard extends StatefulWidget {
@@ -16,7 +16,7 @@ class LinkCard extends StatefulWidget {
   final IconData icon;
   final String title;
   final String subTitle;
-  final FutureContextCallback linkAction;
+  final FutureActionCallback<BuildContext> linkAction;
 
   @override
   createState() => new LinkCardState();

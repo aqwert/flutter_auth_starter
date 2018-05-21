@@ -23,6 +23,8 @@ class ViewModelItem {
 class ViewModel {
   List<ViewModelItem> items;
 
+  List<AuthProvider> signInProviders = [];
+
   Future<ViewModel> loadItems(AuthService authService) async {
     var viewModels = new List<ViewModelItem>();
     var user = await authService.currentUser();
@@ -43,6 +45,16 @@ class ViewModel {
             providerName: linkProv.providerName,
             linkableProvider: linkProv,
             title: 'Connect ${linkProv.providerDisplayName}'));
+      }
+    }
+
+    signInProviders = [];
+    for (var acc in user.providerAccounts) {
+      var authProvider = authService.authProviders.firstWhere(
+          (p) => p.providerName == acc.providerName,
+          orElse: () => null);
+      if (authProvider != null) {
+        signInProviders.add(authProvider);
       }
     }
 

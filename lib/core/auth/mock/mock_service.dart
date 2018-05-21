@@ -75,6 +75,11 @@ class MockService extends AuthService {
 
   @override
   Future<void> closeAccount(Map<String, String> reauthenticationArgs) async {
+    if (DateTime.now().minute % 2 == 0) {
+      //if even minute
+      throw new AuthRequiredException();
+    }
+
     await new Future.delayed(const Duration(milliseconds: 1000), () => {});
 
     _authChangeNotifier.value = new MockUser()..email = null;

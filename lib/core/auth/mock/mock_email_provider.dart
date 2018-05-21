@@ -60,7 +60,7 @@ class MockEmailProvider extends AuthProvider implements LinkableProvider {
     await new Future.delayed(const Duration(milliseconds: 1000), () => {});
 
     return service.authUserChanged.value = new MockUser()
-      ..email = args['email']
+      ..email = args['newEmail']
       ..displayName = currentUser.displayName
       ..photoUrl = currentUser.photoUrl
       ..isEmailVerified =
@@ -86,6 +86,11 @@ class MockEmailProvider extends AuthProvider implements LinkableProvider {
 
   @override
   Future<AuthUser> linkAccount(Map<String, String> args) async {
+    if (args['email'] == 'auth@required') {
+      await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+      throw new AuthRequiredException();
+    }
+
     var currentUser = service.authUserChanged.value;
 
     await new Future.delayed(const Duration(milliseconds: 1000), () => {});

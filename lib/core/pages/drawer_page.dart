@@ -6,7 +6,7 @@ import '../app_info.dart';
 import '../app_model.dart';
 import 'profile_base_state.dart';
 
-import 'license_page.dart' as app;
+import '../dialogs/app_info_dialog.dart' as app;
 
 class DrawerPage extends StatefulWidget {
   DrawerPage({this.licenceAdditionalWidgets});
@@ -22,7 +22,7 @@ class DrawerPageState extends ProfileBaseState<DrawerPage> {
   Widget aboutItem(AppInfo appInfo) {
     return super.listItem(
       'About',
-      () => app.showLicensePage(
+      () => app.showAppInfoDialog(
           appIconPath: appInfo.appIconPath,
           appName: appInfo.appName,
           appVersion: appInfo.appVersion,

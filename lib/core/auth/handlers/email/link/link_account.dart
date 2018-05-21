@@ -9,9 +9,10 @@ import 'link_account_view_model.dart';
 import '../../../../widgets/modalAppBar.dart';
 
 class LinkEmailAccount extends StatefulWidget {
-  LinkEmailAccount(this.linkProvider);
+  LinkEmailAccount(this.linkProvider, {this.onAuthRequired});
 
   final LinkableProvider linkProvider;
+  final VoidCallback onAuthRequired;
 
   @override
   createState() => new LinkEmailAccountState();
@@ -39,13 +40,26 @@ class LinkEmailAccountState
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 32.0),
       child: PlatformButton(
-          child: Text('Sign In'),
-          onPressed: super.showProgress
-              ? null
-              : () => super.validateAndSubmit((_) async {
-                    await doLinkAccount();
-                    Navigator.pop(context);
-                  })),
+        child: Text('Sign In'),
+        onPressed: super.showProgress
+            ? null
+            : () => super.validateAndSubmit(
+                  (_) async {
+                    try {
+                      await doLinkAccount();
+                      Navigator.pop(context);
+                    } on AuthRequiredException catch (error) {
+                      if (widget.onAuthRequired != null) {
+                        print('widget.onAuthRequired');
+                        widget.onAuthRequired();
+                      } else {
+                        throw error;
+                      }
+                      return null;
+                    }
+                  },
+                ),
+      ),
     );
   }
 
@@ -83,12 +97,7 @@ class LinkEmailAccountState
     return super.showProgress
         ? Padding(
             padding: EdgeInsets.all(16.0),
-            child: PlatformCircularProgressIndicator(
-              android: (_) => MaterialProgressIndicatorData(
-                    valueColor: AlwaysStoppedAnimation(Colors.black45),
-                  ),
-            ),
-          )
+            child: PlatformCircularProgressIndicator())
         : Container();
   }
 
