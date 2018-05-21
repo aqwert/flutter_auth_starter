@@ -21,6 +21,11 @@ import '../forgotPassword/forgot_password_page.dart';
 import 'sign_in_view_model.dart';
 
 class SignInPassword extends StatefulWidget {
+  SignInPassword(
+      {this.displaySignInButton = true, this.popRouteOnSignin = false});
+
+  final bool displaySignInButton;
+  final bool popRouteOnSignin;
   @override
   createState() => new SignInPasswordState();
 }
@@ -94,12 +99,18 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
     var provider = _getPasswordProvider(authService);
     await provider
         ?.signIn({'email': _viewModel.email, 'password': _viewModel.password});
+
+    if (widget.popRouteOnSignin) Navigator.pop(context);
   }
 
   Widget _signInButton(AuthService authService) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 32.0),
       child: PlatformButton(
+          android: (_) => MaterialRaisedButtonData(
+              textColor: Colors.white, color: Theme.of(context).primaryColor),
+          ios: (_) =>
+              CupertinoButtonData(color: Theme.of(context).primaryColor),
           child: Text('Sign In'),
           onPressed: super.showProgress
               ? null
@@ -111,8 +122,9 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
   Widget _forgotPasswordButton(AuthService authService) {
     return authService.options.canSendForgotEmail
         ? Padding(
-            padding: const EdgeInsets.only(top: 16.0, left: 32.0, right: 32.0),
-            child: FlatButton(
+            padding: const EdgeInsets.only(
+                bottom: 16.0, top: 16.0, left: 32.0, right: 32.0),
+            child: PlatformButton(
                 child: Text('Forgot password'),
                 onPressed: super.showProgress
                     ? null
@@ -208,7 +220,12 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
       appBar: PlatformAppBar(
         title: Text('Login'),
         trailingActions: <Widget>[
-          HeaderButton(text: 'Sign Up', onPressed: () => _signUp()),
+          widget.displaySignInButton
+              ? HeaderButton(
+                  text: 'Sign Up',
+                  onPressed: () => _signUp(),
+                )
+              : Container(),
         ],
       ),
       body: Material(

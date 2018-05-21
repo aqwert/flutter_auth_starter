@@ -4,43 +4,62 @@ import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
-import 'close_account_view_model.dart';
-import '../../../../widgets/form_progress_actionable_state.dart';
+import '../../../../widgets/progress_actionable_state.dart';
 import '../../../../app_model.dart';
 import '../../../../widgets/modalAppBar.dart';
 import '../../../../dialogs/show_ok_cancel_dialog.dart';
+
+import '../../signin_accounts/signin_picker_dialog.dart';
 
 class CloseAccount extends StatefulWidget {
   @override
   createState() => new CloseAccountState();
 }
 
-class CloseAccountState extends FormProgressActionableState<CloseAccount> {
+class CloseAccountState extends ProgressActionableState<CloseAccount> {
   @override
   void initState() {
     super.initState();
-
-    _viewModel = new ViewModel();
   }
-
-  ViewModel _viewModel;
 
   Future _closeAccount(AuthService authService) async {
-    _viewModel.validateAll();
-
     var user = await authService.currentUser();
-    await authService
-        .closeAccount({'email': user.email, 'password': _viewModel.password});
+
+    try {
+      await authService.closeAccount({});
+    } on AuthRequiredException {
+      var signInProviders = _getSignInProviders(authService, user);
+      handleAuthenticationRequired(signInProviders);
+    }
   }
 
-  Widget _passwordField() {
-    return TextFormField(
-        enabled: !super.showProgress,
-        autocorrect: false,
-        obscureText: true,
-        decoration: InputDecoration(labelText: 'Password'),
-        validator: _viewModel.validatePassword,
-        onSaved: (val) => _viewModel.password = val);
+  List<AuthProvider> _getSignInProviders(
+      AuthService authService, AuthUser user) {
+    List<AuthProvider> signInProviders = [];
+    for (var acc in user.providerAccounts) {
+      var authProvider = authService.authProviders.firstWhere(
+          (p) => p.providerName == acc.providerName,
+          orElse: () => null);
+      if (authProvider != null) {
+        signInProviders.add(authProvider);
+      }
+    }
+
+    return signInProviders;
+  }
+
+  void handleAuthenticationRequired(List<AuthProvider> signInProviders) {
+    showOkCancelDialog(() {
+      Navigator.pop(context);
+
+      showSigninPickerDialog(context, signInProviders);
+    }, () {
+      Navigator.pop(context);
+    },
+        context: context,
+        caption: "Authentication Required",
+        message:
+            "You need to re-authenticate to be able to remove this account");
   }
 
   Widget _progressIndicator() {
@@ -57,12 +76,14 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
   }
 
   void _confirmAndActionClosingAccount(AuthService authService) {
-    super.validateAndSubmit((_) async => await showOkCancelDialog(
-        () => _closeAccount(authService), () => Navigator.pop(context),
-        caption: 'Confirm',
-        message:
-            'Are you sure you want to delete your account? This cannot be undone.',
-        context: context));
+    super.performAction((_) async => await showOkCancelDialog(() {
+          Navigator.pop(context);
+          _closeAccount(authService);
+        }, () => Navigator.pop(context),
+            caption: 'Confirm',
+            message:
+                'Are you sure you want to permanently close your account and delete all data you created? You may be prompted to reauthenticate.',
+            context: context));
   }
 
   Widget _build(AuthService authService) {
@@ -70,13 +91,20 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
         child: Column(children: <Widget>[
       Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Text('Please enter you current password to delete your account'),
+        child: Text(
+            'Closing your account will permanently delete any data you created. This cannot be undone'),
       ),
-      _passwordField(),
       Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.only(top: 32.0),
+        child: Text(
+          'Do you wish to continue?',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(16.0),
         child: PlatformButton(
-            child: Text('Close and Delete Account'),
+            child: Text('Yes, close my account'),
             onPressed: super.showProgress
                 ? null
                 : () => _confirmAndActionClosingAccount(authService)),
@@ -85,9 +113,9 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
     ]));
   }
 
-  Form _asForm(Widget widget) {
-    return Form(autovalidate: true, key: super.formKey, child: widget);
-  }
+  // Form _asForm(Widget widget) {
+  //   return Form(autovalidate: true, key: super.formKey, child: widget);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +123,7 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
       rebuildOnChange: false,
       builder: (_, child, model) => PlatformScaffold(
             appBar: ModalAppBar(
-              title: Text('Delete Account'),
+              title: Text('Close Account'),
               hideAccept: true,
               closeAction: () => Navigator.maybePop(context),
             ),
@@ -103,9 +131,7 @@ class CloseAccountState extends FormProgressActionableState<CloseAccount> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Material(
                 color: isMaterial ? null : Theme.of(context).cardColor,
-                child: _asForm(
-                  _build(model.authService),
-                ),
+                child: _build(model.authService),
               ),
             ),
           ),

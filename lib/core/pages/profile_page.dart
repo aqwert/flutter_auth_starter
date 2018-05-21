@@ -11,7 +11,7 @@ import 'profile_base_state.dart';
 import '../widgets/header_button.dart';
 import '../widgets/tablet_aware_layout_builder.dart';
 
-import 'license_page.dart' as app;
+import '../dialogs/app_info_dialog.dart' as app;
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({this.licenceAdditionalWidgets});
@@ -27,7 +27,7 @@ class ProfilePageState extends ProfileBaseState<ProfilePage> {
   Widget aboutItem(AppInfo appInfo) {
     return super.listItem(
       'About',
-      () => app.showLicensePage(
+      () => app.showAppInfoDialog(
           appIconPath: appInfo.appIconPath,
           appName: appInfo.appName,
           appVersion: appInfo.appVersion,

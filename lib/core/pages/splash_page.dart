@@ -120,10 +120,16 @@ class SplashState extends ProgressActionableState<Splash> {
           child: email.SignInButton()));
     }
     if (googleProvider != null) {
-      widgets.add(Padding(
+      widgets.add(
+        Padding(
           padding: EdgeInsets.symmetric(vertical: 8.0),
-          child:
-              google.SignInButton(provider: googleProvider, actionable: this)));
+          child: google.SignInButton(action: (_) async {
+            await performAction((BuildContext context) async {
+              await googleProvider.signIn({});
+            });
+          }),
+        ),
+      );
     }
 
     widgets.add(Padding(padding: EdgeInsets.only(top: 16.0)));

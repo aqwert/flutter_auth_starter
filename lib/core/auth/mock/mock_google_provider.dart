@@ -15,8 +15,15 @@ class MockGoogleProvider extends AuthProvider implements LinkableProvider {
   @override
   String get providerDisplayName => "Google";
 
+  bool _linkAccountRequiredAuth = true;
   @override
   Future<AuthUser> linkAccount(Map<String, String> args) async {
+    if (_linkAccountRequiredAuth) {
+      await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+      _linkAccountRequiredAuth = false;
+      throw new AuthRequiredException();
+    }
+
     var currentUser = service.authUserChanged.value;
 
     await new Future.delayed(const Duration(milliseconds: 1000), () => {});

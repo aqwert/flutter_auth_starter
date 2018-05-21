@@ -170,6 +170,9 @@ class SignUpPasswordState extends FormProgressActionableState<SignUpPassword> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 32.0),
       child: PlatformButton(
+        android: (_) => MaterialRaisedButtonData(
+            textColor: Colors.white, color: Theme.of(context).primaryColor),
+        ios: (_) => CupertinoButtonData(color: Theme.of(context).primaryColor),
         child: Text('Sign Up'),
         onPressed: super.showProgress
             ? null

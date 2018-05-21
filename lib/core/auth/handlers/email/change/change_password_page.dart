@@ -33,7 +33,9 @@ class ChangePasswordState extends FormProgressActionableState<ChangePassword> {
   Future _changePassword(AuthService authService) async {
     var provider = _getPasswordProvider(authService);
 
+    var user = await authService.currentUser();
     await provider?.changePassword({
+      'currentEmail': user.email,
       'currentPassword': _viewModel.currentPassword,
       'newPassword': _viewModel.newPassword
     });

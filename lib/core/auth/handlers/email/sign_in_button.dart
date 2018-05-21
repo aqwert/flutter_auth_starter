@@ -1,19 +1,28 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'signIn/sign_in_page.dart';
 import 'icon.dart';
 
-void signIn(BuildContext context) {
-  Navigator.push(context, MaterialPageRoute(builder: (_) => SignInPassword()));
+import '../../../common/future_action_callback.dart';
+
+Future signIn(BuildContext context) {
+  return Navigator.push(
+      context, MaterialPageRoute(builder: (_) => SignInPassword()));
 }
 
 class SignInButton extends StatelessWidget {
+  SignInButton({this.action = signIn});
+
+  final FutureActionCallback<BuildContext> action;
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return RaisedButton(
       color: theme.primaryColor,
       padding: EdgeInsets.all(8.0),
-      onPressed: () => signIn(context),
+      onPressed: () => action(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

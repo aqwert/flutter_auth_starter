@@ -6,26 +6,20 @@ import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:meta/meta.dart';
 
 import 'icon.dart';
-import '../../../common/actionable.dart';
 
-Future signInAction(AuthProvider provider, Actionable actionable) async {
-  await actionable.performAction((BuildContext context) async {
-    await provider.signIn({});
-  });
-}
+import '../../../common/future_action_callback.dart';
 
 class SignInButton extends StatelessWidget {
-  SignInButton({@required this.provider, @required this.actionable});
+  SignInButton({@required this.action});
 
-  final AuthProvider provider;
-  final Actionable actionable;
+  final FutureActionCallback<BuildContext> action;
 
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
       color: Colors.red,
       padding: EdgeInsets.all(8.0),
-      onPressed: () async => await signInAction(provider, actionable),
+      onPressed: () async => await action(context),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[

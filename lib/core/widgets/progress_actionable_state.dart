@@ -3,13 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'progressable_state.dart';
+import '../common/future_action_callback.dart';
 import '../common/actionable.dart';
 import '../common/app_exception.dart';
 import '../dialogs/show_error_dialog.dart';
 
 abstract class ProgressActionableState<T extends StatefulWidget>
     extends ProgressableState<T> implements Actionable {
-  Future performAction(FutureContextCallback action) async {
+  Future performAction(FutureActionCallback<BuildContext> action) async {
     setProgress(true);
     try {
       FocusScope.of(context).requestFocus(FocusNode());

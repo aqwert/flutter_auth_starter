@@ -34,8 +34,14 @@ class ChangeEmailState extends FormProgressActionableState<ChangeEmail> {
   Future _changeEmail(AuthService authService) async {
     var provider = _getPasswordProvider(authService);
 
+    var user = await authService.currentUser();
     await provider?.changePrimaryIdentifier(
-        {'email': _viewModel.email, 'password': _viewModel.password});
+      {
+        'currentEmail': user.email,
+        'newEmail': _viewModel.email,
+        'password': _viewModel.password
+      },
+    );
 
     Navigator.pop(context);
   }

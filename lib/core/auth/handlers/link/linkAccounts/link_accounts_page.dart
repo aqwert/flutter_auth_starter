@@ -12,6 +12,9 @@ import '../../email/icon.dart' as email;
 import '../../google/icon.dart' as google;
 import 'link_card.dart';
 
+import '../../../../dialogs/show_ok_cancel_dialog.dart';
+import '../../signin_accounts/signin_picker_dialog.dart';
+
 class LinkAccounts extends StatefulWidget {
   @override
   createState() => new LinkAccountsState();
@@ -56,7 +59,8 @@ class LinkAccountsState extends State<LinkAccounts> {
     );
   }
 
-  Widget _buildLinkableCard({ViewModelItem viewModel, IconData icon}) {
+  Widget _buildLinkableCard(
+      {ViewModel parentViewModel, ViewModelItem viewModel, IconData icon}) {
     switch (viewModel.providerName) {
       case 'password':
         return LinkCard(
@@ -65,8 +69,11 @@ class LinkAccountsState extends State<LinkAccounts> {
           subTitle: viewModel.subTitle,
           linkAction: (context) async => await openDialog(
                 context: context,
-                builder: (_) =>
-                    email.LinkEmailAccount(viewModel.linkableProvider),
+                builder: (_) => email.LinkEmailAccount(
+                      viewModel.linkableProvider,
+                      onAuthRequired: () =>
+                          handleAuthenticationRequired(parentViewModel),
+                    ),
               ),
         );
       case 'google':
@@ -74,10 +81,30 @@ class LinkAccountsState extends State<LinkAccounts> {
           icon: google.providerIcon,
           title: viewModel.title,
           subTitle: viewModel.subTitle,
-          linkAction: (_) => viewModel.linkableProvider.linkAccount({}),
+          linkAction: (context) async {
+            try {
+              await viewModel.linkableProvider.linkAccount({});
+            } on AuthRequiredException {
+              handleAuthenticationRequired(parentViewModel);
+            }
+          },
         );
     }
     return Container();
+  }
+
+  void handleAuthenticationRequired(ViewModel viewModel) {
+    showOkCancelDialog(() {
+      Navigator.pop(context);
+
+      showSigninPickerDialog(context, viewModel.signInProviders);
+    }, () {
+      Navigator.pop(context);
+    },
+        context: context,
+        caption: "Authentication Required",
+        message:
+            "You need to re-authenticate to be able to connect this account");
   }
 
   Widget _handleCompleted(ViewModel viewModel) {
@@ -106,7 +133,9 @@ class LinkAccountsState extends State<LinkAccounts> {
                     viewModel: vm, icon: _icons[vm.providerName]);
               } else {
                 return _buildLinkableCard(
-                    viewModel: vm, icon: _icons[vm.providerName]);
+                    parentViewModel: viewModel,
+                    viewModel: vm,
+                    icon: _icons[vm.providerName]);
               }
             },
           ),
