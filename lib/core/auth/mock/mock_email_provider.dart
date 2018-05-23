@@ -16,24 +16,35 @@ class MockEmailProvider extends AuthProvider implements LinkableProvider {
   String get providerDisplayName => "Email with Password";
 
   @override
-  Future<AuthUser> create(Map<String, String> args) async {
+  Future<AuthUser> create(Map<String, String> args,
+      {termsAccepted = false}) async {
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
+    //We are meant to display a confirmation of terms and privacy policy
+    //for all newly added users. Therefore this is mocking that intent.
+    //The called need to set the accepted flag to not raise this exception
+    if (!termsAccepted) {
+      throw new UserAcceptanceRequiredException(args);
+    }
+
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
     var user = new MockUser()
       ..email = args['email']
       ..displayName = 'Mocked';
-
-    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
 
     service.authUserChanged.value = user;
     return user;
   }
 
   @override
-  Future<AuthUser> signIn(Map<String, String> args) async {
+  Future<AuthUser> signIn(Map<String, String> args,
+      {termsAccepted = false}) async {
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
     var user = new MockUser()
       ..email = args['email']
       ..displayName = 'Mocked';
-
-    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
 
     service.authUserChanged.value = user;
     return user;

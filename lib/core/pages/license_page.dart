@@ -185,7 +185,7 @@ String _defaultApplicationVersion(BuildContext context) {
   return '';
 }
 
-Widget _defaultApplicationIcon(BuildContext context) {
-  // TODO(ianh): Get this from the embedder somehow.
-  return null;
-}
+// Widget _defaultApplicationIcon(BuildContext context) {
+//   // TODO(ianh): Get this from the embedder somehow.
+//   return null;
+// }

@@ -1,5 +1,3 @@
-import 'package:flutter_auth_base/flutter_auth_base.dart';
-
 import '../../../../validators/validator.dart';
 import '../../../../validators/password_validator.dart' as passwordValidator;
 import '../../../../validators/words_match_validator.dart'

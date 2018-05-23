@@ -42,8 +42,19 @@ class MockGoogleProvider extends AuthProvider implements LinkableProvider {
   }
 
   @override
-  Future<AuthUser> signIn(Map<String, String> args) async {
-    await new Future.delayed(const Duration(milliseconds: 2000), () => {});
+  Future<AuthUser> signIn(Map<String, String> args,
+      {termsAccepted = false}) async {
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
+    //We are meant to display a confirmation of terms and privacy policy
+    //for all newly added users. Therefore this is mocking that intent.
+    //The called need to set the accepted flag to not raise this exception
+    if (!termsAccepted) {
+      throw new UserAcceptanceRequiredException(
+          {'accessId': '1234', 'uid': 'abcd'});
+    }
+
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
 
     print('******** Google sign in ********');
     var google = new MockUserGoogleAccount();
@@ -68,7 +79,8 @@ class MockGoogleProvider extends AuthProvider implements LinkableProvider {
   }
 
   @override
-  Future<AuthUser> create(Map<String, String> args) async {
+  Future<AuthUser> create(Map<String, String> args,
+      {termsAccepted = false}) async {
     throw new UnsupportedError('Cannot create Google password ');
   }
 

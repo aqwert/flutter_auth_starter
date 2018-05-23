@@ -6,6 +6,7 @@ import 'package:flutter_auth_base/flutter_auth_base.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+import '../common/dialog.dart';
 import '../widgets/tablet_aware_scaffold.dart';
 import '../widgets/screen_logo.dart';
 import '../widgets/progress_actionable_state.dart';
@@ -16,6 +17,8 @@ import '../auth/handlers/google/sign_in_button.dart' as google;
 
 import '../app_model.dart';
 import '../app_info.dart';
+
+import '../auth/handlers/user/termsAcceptance/terms_accept_modal.dart';
 
 enum LoginState {
   LoginSuccessful,
@@ -61,17 +64,18 @@ class SplashState extends ProgressActionableState<Splash> {
     }
   }
 
-  Widget _handleCompleted(AuthService authService, LoginState state) {
+  Widget _handleCompleted(
+      AppInfo appInfo, AuthService authService, LoginState state) {
     if (state == LoginState.LoginRequired) {
-      return _buttons(authService);
+      return _buttons(appInfo, authService);
     } else if (state == LoginState.LoginSuccessful) {
       //_navigateToHome();
     }
     return Container();
   }
 
-  Widget _handleError(AuthService authService, Object error) {
-    return _buttons(authService, errorMessage: error.toString());
+  Widget _handleError(AppInfo appInfo, AuthService authService, Object error) {
+    return _buttons(appInfo, authService, errorMessage: error.toString());
   }
 
   Widget _progressIndicator() {
@@ -88,9 +92,9 @@ class SplashState extends ProgressActionableState<Splash> {
   Widget _handleSnapshot(AppModel model, BuildContext context,
       AsyncSnapshot<LoginState> snapshot) {
     if (snapshot.hasData) {
-      return _handleCompleted(model.authService, snapshot.data);
+      return _handleCompleted(model.appInfo, model.authService, snapshot.data);
     } else if (snapshot.hasError) {
-      return _handleError(model.authService, snapshot.error);
+      return _handleError(model.appInfo, model.authService, snapshot.error);
     } else {
       return _progressIndicator();
     }
@@ -109,7 +113,8 @@ class SplashState extends ProgressActionableState<Splash> {
     });
   }
 
-  Widget _buttons(AuthService authService, {String errorMessage}) {
+  Widget _buttons(AppInfo appInfo, AuthService authService,
+      {String errorMessage}) {
     var passwordProvider = _getPasswordProvider(authService);
     var googleProvider = _getGoogleProvider(authService);
 
@@ -125,7 +130,14 @@ class SplashState extends ProgressActionableState<Splash> {
           padding: EdgeInsets.symmetric(vertical: 8.0),
           child: google.SignInButton(action: (_) async {
             await performAction((BuildContext context) async {
-              await googleProvider.signIn({});
+              try {
+                await googleProvider.signIn({}, termsAccepted: false);
+              } on UserAcceptanceRequiredException catch (error) {
+                bool accepted = await _handleAcceptanceRequired();
+
+                if (accepted)
+                  await googleProvider.signIn(error.data, termsAccepted: true);
+              }
             });
           }),
         ),
@@ -140,6 +152,14 @@ class SplashState extends ProgressActionableState<Splash> {
     }
 
     return Column(children: widgets);
+  }
+
+  Future<bool> _handleAcceptanceRequired() async {
+    var accepted = await openDialog<bool>(
+      context: context,
+      builder: (_) => TermsAcceptModal(),
+    );
+    return accepted;
   }
 
   Widget _withProgress(Widget child) {

@@ -30,8 +30,6 @@ class ViewModel {
   String password = '';
   String passwordConfirm = '';
 
-  bool termsAccepted = false;
-
   Validator _validator;
 
   String validateDisplayName(String value) => validateIfNotEmpty(
@@ -53,9 +51,6 @@ class ViewModel {
     var errors = _validator.validate();
     if (errors != null && errors.length > 0) {
       throw new AppException(errors);
-    } else if (!termsAccepted) {
-      throw new AppException(
-          "Please read and accept Terms of Service and Privacy Policy");
     }
   }
 }

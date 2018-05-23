@@ -17,6 +17,7 @@ import '../../../../widgets/email_image_circle_avatar.dart';
 
 import '../signUp/sign_up_page.dart';
 import '../forgotPassword/forgot_password_page.dart';
+import '../../user/termsAcceptance/terms_accept_modal.dart';
 
 import 'sign_in_view_model.dart';
 
@@ -97,10 +98,27 @@ class SignInPasswordState extends FormProgressActionableState<SignInPassword> {
     _viewModel.validateAll();
 
     var provider = _getPasswordProvider(authService);
-    await provider
-        ?.signIn({'email': _viewModel.email, 'password': _viewModel.password});
+    try {
+      await provider?.signIn(
+          {'email': _viewModel.email, 'password': _viewModel.password});
+    } on UserAcceptanceRequiredException {
+      bool accepted = await _handleAcceptanceRequired();
+
+      if (accepted)
+        await provider?.create(
+            {'email': _viewModel.email, 'password': _viewModel.password},
+            termsAccepted: true);
+    }
 
     if (widget.popRouteOnSignin) Navigator.pop(context);
+  }
+
+  Future<bool> _handleAcceptanceRequired() async {
+    var accepted = await openDialog<bool>(
+      context: context,
+      builder: (_) => TermsAcceptModal(),
+    );
+    return accepted;
   }
 
   Widget _signInButton(AuthService authService) {
