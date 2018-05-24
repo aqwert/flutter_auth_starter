@@ -15,6 +15,7 @@ import '../auth/handlers/user/closeAccount/close_account_page.dart';
 import '../common/dialog.dart';
 import '../dialogs/show_error_dialog.dart';
 import '../dialogs/show_ok_cancel_dialog.dart';
+import '../dialogs/show_info_dialog.dart';
 import '../widgets/email_image_circle_avatar.dart';
 
 abstract class ProfileBaseState<T extends StatefulWidget> extends State<T> {
@@ -89,7 +90,7 @@ abstract class ProfileBaseState<T extends StatefulWidget> extends State<T> {
       subtitle: subTitle == null
           ? null
           : Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(top: 8.0, left: 8.0),
               child: Text(subTitle),
             ),
       onTap: onTap,
@@ -131,10 +132,18 @@ abstract class ProfileBaseState<T extends StatefulWidget> extends State<T> {
     }
   }
 
+  Future _acknowledgeEmailSend() async {
+    return await showInfoDialog(() async => Navigator.pop(context),
+        context: context,
+        caption: 'Email Sent',
+        message: 'Please check your email.');
+  }
+
   Future _sendVerifyEmail(AuthService authService, AuthUser userInfo) async {
     return await showOkCancelDialog(() async {
       Navigator.pop(context);
-      await _sendVerificationEmail(authService, userInfo);
+      _sendVerificationEmail(authService, userInfo);
+      _acknowledgeEmailSend();
     }, () => Navigator.pop(context),
         context: context,
         caption: 'Send Verification Email',

@@ -52,6 +52,13 @@ class MockService extends AuthService {
   }
 
   @override
+  Future<AuthUser> refreshUser() async {
+    await new Future.delayed(const Duration(milliseconds: 1000), () => {});
+
+    return _authChangeNotifier.value;
+  }
+
+  @override
   Future<AuthUser> setUserDisplayName(String name) async {
     var user = _authChangeNotifier.value;
 

@@ -92,7 +92,9 @@ class ForgotPasswordState extends FormProgressActionableState<ForgotPassword> {
             ? Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                    'An email has been sent to this address. Please open the email and follow the instructions to reset your password'),
+                  'An email has been sent to this address. Please open the email and follow the instructions to reset your password',
+                  textAlign: TextAlign.center,
+                ),
               )
             : Container(),
         _progressIndicator()
