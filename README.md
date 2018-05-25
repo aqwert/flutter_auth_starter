@@ -247,9 +247,9 @@ Map<String, WidgetBuilder> buildRoutes(AuthService authService) {
 
 This starter project also has helper functions to render to a mobile or tablet layout.
 
-## 1 vs 2 column layout
+## Mobile or Tablet layout
 
-For mobile, it is desireable in portrait mode to render a single column. When the device has a certain width (either when viewing in Portrait mode or on a tablet) it will show a 2 column layout
+For mobile, it is desireable in portrait mode to render a single column. When the device has a certain width (either when viewing in Portrait mode or on a tablet) it should show a 2 column layout.
 
 **Example**
 
@@ -274,11 +274,11 @@ Looking at the [Splash page ](https://github.com/aqwert/flutter_auth_starter/blo
   }
 ```
 
-The `TabletAwareScaffold` will render the mobileView if the screen width is under 660, otherwise it will render the tabletView. Of course it is up to the implmentation of these `WidgetBuilders` to return the appropriate view.
+The `TabletAwareScaffold` will render the mobileView if the screen width is under 660, otherwise it will render the tabletView. Of course it is up to the implmentation of these `WidgetBuilders` to return the appropriate view (i.e. 1 column vs 2 column layout).
 
 ## Modal Dialogs.
 
-Instead of using the `showDialog` directly there is a [utility wrapper](https://github.com/aqwert/flutter_auth_starter/blob/master/lib/core/common/dialog.dart) that will either 
+Instead of using the `showDialog` directly there is a [utility wrapper](https://github.com/aqwert/flutter_auth_starter/blob/master/lib/core/common/dialog.dart) that will either:
 
 * Push a MaterialPageRoute with fullScreenDialog set to true, or
 * Use showDialog to 'popup' a dialog with a margin
