@@ -28,19 +28,91 @@ This auth starter project for flutter simplifies the addition of signing in and 
         * Available the Drawer in Material (for android) and a Profile Page (slidein for iOS)
     * Pluggable authentication provider model (uses [flutter_auth_base](https://github.com/aqwert/flutter_auth_base))
         * Built-in Mock provider 
-        * External provider for Firebase Auth: (flutter_auth_firebase)[https://github.com/aqwert/flutter_auth_firebase] integration 
+        * External provider for Firebase Auth: [flutter_auth_firebase](https://github.com/aqwert/flutter_auth_firebase) integration 
     * Gravatar image provider to display the gravatar image of the user when signing in/up and for display on the Drawer and Profile page
     * Basic form validation for email, password, name inputs
 
+## Known Issues
+
+Currently only material light theme is supported. 
+
+## Get Started
+
+There are a number of ways to get started.
+
+ > In my opinion it may be better to first fork into your own repository as a "copy", then use the pubspec reference method into your real project. This will give you the control of merging any changes back into your fork but also treating the package as a module into the application.
+
+### Fork
+
+Simply folk the entire repository.
+* Pros: 
+    * Quick 
+    * Will be able to customise any of the code
+    * And check the changes back in for you own purposes
+    * Could more easily merge changes back into your fork
+* Cons: 
+    * Linked back to this project which may be undesirable.
+    * Will pull in more than you require.
+    * Will need to change the name of the project.
+    * You will have the source code in your project which may add unnecessary noise
+        * Unless you use the pubspec method mentioned below
+    
+### Copy the code
+
+If you clone or folk the code first, then you could simply copy the `core` folder into your project
+
+* Pros:
+    * You take what you need.
+    * Can customise the code.
+    * You can place the code anywhere.
+    * Any changes to this repo won't get into your project automatically
+* Cons:
+    * Any updates from this repo will be a manual task.
+    * You will have the source code in your project which may add unnecessary noise
+    
+#### Link via pubspec.yaml
+
+To treat this like any other package you can reference the git repository directly
+
+```yml
+  flutter_auth_starter: 
+    git:
+      url: https://github.com/aqwert/flutter_auth_starter.git
+````
+
+Pros:
+    * Not pulling in the code int your project
+    * Quickest way to get started.
+    
+Cons: 
+    * Cannot modify any of the code from within your project. You get what you get
+    * Any updates from this repo may be undesirable, or may break your application 
+
 ## Dependencies
 
-TODO
+Once your own custom project is created, at a minimum the following should be included in the `pubspec.yaml` file:
 
-## Usage
+```yml
+<snip>
+dependencies:
+  <snip>
 
-TODO: pubspec link to the core directory
-TODO: Copy Core
-TODO: Fork repo
+  scoped_model: "^0.2.0"
+  async_loader: "^0.1.1"
+  font_awesome_flutter: 6.0.0
+  url_launcher: "^3.0.0"
+
+  flutter_auth_base: "^0.1.5"
+  flutter_platform_widgets: "^0.2.0"
+  flutter_auth_starter: 
+    git:
+      url: https://github.com/aqwert/flutter_auth_starter.git
+
+<snip>
+```
+
+ > Note that the versions may be higher than listed.
+ > See 'Getting Started' above if the package  `flutter_auth_starter` is to be included this way.
 
 ## Setup
 
@@ -98,8 +170,8 @@ This starter uses [ScopedModel](https://pub.dartlang.org/packages/scoped_model) 
 The `ScopedModel` wraps the main application widget `MaterialApp` so that it can be accessed by the routed pages.
 
 ```dart
-var app = ScopedModel<AuthModel>(
-      model: AuthModel(appInfo: appInfo, authService: authService),
+var app = ScopedModel<AppModel>(
+      model: AppModel(appInfo: appInfo, authService: authService),
       child: MaterialApp(
           title: appInfo.appName,
           navigatorKey: _navKey,
@@ -110,7 +182,7 @@ var app = ScopedModel<AuthModel>(
           onGenerateRoute: routing.buildGenerator()));
 ```
 
-**AuthModel**
+**AppModel**
 
 This is the main application model that holds authentication information such as the state of the currect user, notify of any changes to the user whether they login or logout and access to teh main authentication service
 
@@ -138,7 +210,7 @@ Map<String, WidgetBuilder> buildRoutes(AuthService authService) {
  
  ### Configure the Authentication Listener
  
- In order to route to the `Splash` page when the user logs out or to route to the `HomePage` when the user is succesasfully authenticated, a listener needs to be placed on the `AuthModel`.
+ In order to route to the `Splash` page when the user logs out or to route to the `HomePage` when the user is succesasfully authenticated, a listener needs to be placed on the `AppModel`.
  
  ```dart
  authService.authUserChanged.addListener(() {
