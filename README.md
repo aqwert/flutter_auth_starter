@@ -4,6 +4,8 @@ This auth starter project for flutter simplifies the addition of signing in and 
 
 This is an opinionated view of authentication within a flutter app. Specific use cases may not be covered or different to what is expected.
 
+**[Screenshots](./SCREENSHOTS.md)**
+
 ## Features
 
 * Pages
