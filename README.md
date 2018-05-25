@@ -33,6 +33,11 @@ This is an opinionated view of authentication within a flutter app. Specific use
         * External provider for Firebase Auth: [flutter_auth_firebase](https://github.com/aqwert/flutter_auth_firebase) integration 
     * Gravatar image provider to display the gravatar image of the user when signing in/up and for display on the Drawer and Profile page
     * Basic form validation for email, password, name inputs
+    * Tablet aware screens. See section at the bottom on how this is done.
+        * Landscape vs Portrait
+            * If the screen width is greater then 660 px then the splash, signin and sign up pages will change to a 2 column layout.
+        * Modal Dialogs
+            * For pages such as `ForgotPassword` the page will either be a full sized modal dialog for smaller screens, or a dialog with margin having a semi transpaetrnt border rendering the page underneath it.
 
 ## Known Issues or Outstanding work
 
@@ -237,6 +242,68 @@ Map<String, WidgetBuilder> buildRoutes(AuthService authService) {
  ## Configure the App
  
  Simply: `runApp(app);` at the end
+ 
+# Screen Aware sizing
+
+This starter project also has helper functions to render to a mobile or tablet layout.
+
+## 1 vs 2 column layout
+
+For mobile, it is desireable in portrait mode to render a single column. When the device has a certain width (either when viewing in Portrait mode or on a tablet) it will show a 2 column layout
+
+**Example**
+
+Looking at the [Splash page ](https://github.com/aqwert/flutter_auth_starter/blob/master/lib/core/pages/splash_page.dart) the layout will change from a single column to a double column
+
+```dart
+ @override
+  Widget build(BuildContext context) {
+    return ScopedModelDescendant<AppModel>(
+      builder: (_, child, model) {
+        Color bgColor = Colors.white;
+        Color fgColor = Colors.black87;
+
+        return TabletAwareScaffold(
+            mobileView: (_) =>
+                _buildMobileView(model.appInfo, _loader, fgColor),
+            tabletView: (_) =>
+                _buildTabletView(model.appInfo, _loader, bgColor, fgColor),
+            backgroundColor: bgColor);
+      },
+    );
+  }
+```
+
+The `TabletAwareScaffold` will render the mobileView if the screen width is under 660, otherwise it will render the tabletView. Of course it is up to the implmentation of these `WidgetBuilders` to return the appropriate view.
+
+## Modal Dialogs.
+
+Instead of using the `showDialog` directly there is a [utility wrapper](https://github.com/aqwert/flutter_auth_starter/blob/master/lib/core/common/dialog.dart) that will either 
+
+* Push a MaterialPageRoute with fullScreenDialog set to true, or
+* Use showDialog to 'popup' a dialog with a margin
+
+**Example**
+
+Looking at the [Sign in page](https://github.com/aqwert/flutter_auth_starter/blob/master/lib/core/auth/handlers/email/signIn/sign_in_page.dart) it will [display a modal dialog](https://github.com/aqwert/flutter_auth_starter/blob/cf1dad801d9a7dfd8877497a462927a972525866/lib/core/auth/handlers/email/signIn/sign_in_page.dart#L144) for the forgotten passowrd page.
+
+```dart
+Widget _forgotPasswordButton(AuthService authService) {
+    return authService.options.canSendForgotEmail
+        ? Padding(
+            padding: const EdgeInsets.only(
+                bottom: 16.0, top: 16.0, left: 32.0, right: 32.0),
+            child: PlatformButton(
+                child: Text('Forgot password'),
+                onPressed: super.showProgress
+                    ? null
+                    : () async => await openDialog(
+                        context: context, builder: (_) => ForgotPassword())))
+        : Container();
+  }
+```
+
+Note the `await openDialog(...)` call.
 
 # Issues and Feedback
 
