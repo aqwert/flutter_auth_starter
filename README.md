@@ -34,9 +34,15 @@ This is an opinionated view of authentication within a flutter app. Specific use
     * Gravatar image provider to display the gravatar image of the user when signing in/up and for display on the Drawer and Profile page
     * Basic form validation for email, password, name inputs
 
-## Known Issues
+## Known Issues or Outstanding work
 
-Currently only material light theme is supported. 
+- [ ] Currently only material light theme is supported. 
+- [ ] Incorporate Twitter, Github social auth
+- [ ] Anonymous (Guest mode) sign in
+- [ ] Sign in with Email link
+- [ ] Extending Drawer and Profile list.
+- [ ] Ability to change avatar image
+- [ ] Biometric login (Fingerprint / Retina)
 
 ## Get Started
 
