@@ -178,7 +178,7 @@ The external url that links to your application's privacy policy. Accessed from 
 
 The external url that links to your applications terms of service. Accessed from the Terms of Use page and the Drawer / Profile page.
 
-### Configure the ScopedModel\<AuthModel>
+### Configure the ScopedModel\<AppModel>
 
 This starter uses [ScopedModel](https://pub.dartlang.org/packages/scoped_model) for holding the state of the user authentication, plus providing access to the authentication service. The use of `ScopedModel` should not interfere with the use of any other state management packages (such as [Flutter Redux](https://pub.dartlang.org/packages/flutter_redux)) or [Inhertited Widgets](https://docs.flutter.io/flutter/widgets/InheritedWidget-class.html).
 
