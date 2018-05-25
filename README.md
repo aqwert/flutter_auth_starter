@@ -167,7 +167,7 @@ The external url that links to your applications terms of service. Accessed from
 
 ### Configure the ScopedModel\<AuthModel>
 
-This starter uses [ScopedModel](https://pub.dartlang.org/packages/scoped_model) for holding the state of the user authentication, plus providing access to the authentication service. The use of `ScopedModel` should not interfere with teh use of any other state management packages (such as [Flutter Redux](https://pub.dartlang.org/packages/flutter_redux)) or [Inhertited Widgets](https://docs.flutter.io/flutter/widgets/InheritedWidget-class.html).
+This starter uses [ScopedModel](https://pub.dartlang.org/packages/scoped_model) for holding the state of the user authentication, plus providing access to the authentication service. The use of `ScopedModel` should not interfere with the use of any other state management packages (such as [Flutter Redux](https://pub.dartlang.org/packages/flutter_redux)) or [Inhertited Widgets](https://docs.flutter.io/flutter/widgets/InheritedWidget-class.html).
 
 The `ScopedModel` wraps the main application widget `MaterialApp` so that it can be accessed by the routed pages.
 
@@ -186,7 +186,7 @@ var app = ScopedModel<AppModel>(
 
 **AppModel**
 
-This is the main application model that holds authentication information such as the state of the currect user, notify of any changes to the user whether they login or logout and access to teh main authentication service
+This is the main application model that holds authentication information such as the state of the currect user, notify of any changes to the user whether they login or logout and access to the main authentication service
 
 **home**
 
