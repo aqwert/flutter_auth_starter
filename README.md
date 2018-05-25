@@ -44,7 +44,7 @@ There are a number of ways to get started.
 
 ### Fork
 
-Simply folk the entire repository.
+Simply fork the entire repository.
 * Pros: 
     * Quick 
     * Will be able to customise any of the code
@@ -59,7 +59,7 @@ Simply folk the entire repository.
     
 ### Copy the code
 
-If you clone or folk the code first, then you could simply copy the `core` folder into your project
+If you clone or fork the code first, then you could simply copy the `core` folder into your project
 
 * Pros:
     * You take what you need.
