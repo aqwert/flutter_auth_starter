@@ -309,3 +309,6 @@ Note the `await openDialog(...)` call.
 
 Please [create](https://github.com/aqwert/flutter_auth_starter/issues/new) an issue to provide feedback or an issue.
 
+![alt text](https://user-images.githubusercontent.com/4413519/40525703-d70be7f6-6035-11e8-9e9d-29c59b955fe7.PNG "Logo")
+
+
