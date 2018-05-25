@@ -83,7 +83,7 @@ To treat this like any other package you can reference the git repository direct
 ````
 
 * Pros:
-    * Not pulling in the code int your project
+    * Not pulling in the code into your project
     * Quickest way to get started.
     
 * Cons: 
