@@ -70,7 +70,7 @@ If you clone or fork the code first, then you could simply copy the `core` folde
     * Any updates from this repo will be a manual task.
     * You will have the source code in your project which may add unnecessary noise
     
-#### Link via pubspec.yaml
+### Link via pubspec.yaml
 
 To treat this like any other package you can reference the git repository directly
 
@@ -80,11 +80,11 @@ To treat this like any other package you can reference the git repository direct
       url: https://github.com/aqwert/flutter_auth_starter.git
 ````
 
-Pros:
+* Pros:
     * Not pulling in the code int your project
     * Quickest way to get started.
     
-Cons: 
+* Cons: 
     * Cannot modify any of the code from within your project. You get what you get
     * Any updates from this repo may be undesirable, or may break your application 
 
@@ -230,4 +230,7 @@ Map<String, WidgetBuilder> buildRoutes(AuthService authService) {
  
  Simply: `runApp(app);` at the end
 
+# Issues and Feedback
+
+Please [create](https://github.com/aqwert/flutter_auth_starter/issues/new) an issue to provide feedback or an issue.
 
