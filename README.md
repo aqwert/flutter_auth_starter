@@ -180,6 +180,8 @@ The external url that links to your applications terms of service. Accessed from
 
 ### Configure the AuthService
 
+ > Note there is a [Firebase](https://github.com/aqwert/flutter_auth_firebase) implementation which can be used.
+
 Out of the box this starter has mocked instances to get started.
 
 `var authService = auth.createMockedAuthService();`
