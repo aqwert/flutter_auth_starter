@@ -145,7 +145,7 @@ void showLicensePage(
     String applicationVersion,
     Widget applicationIcon,
     String applicationLegalese}) {
-  Navigator.maybePop(context);
+  Navigator.pop(context);
   Navigator.push(
       context,
       new MaterialPageRoute<void>(
