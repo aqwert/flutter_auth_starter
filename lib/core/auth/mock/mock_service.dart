@@ -44,7 +44,7 @@ class MockService extends AuthService {
   }
 
   @override
-  Future<String> currentUserToken() async {
+  Future<String> currentUserToken({bool refresh = false}) async {
     if (_authChangeNotifier.value.isValid) {
       return _authChangeNotifier.value.email;
     }

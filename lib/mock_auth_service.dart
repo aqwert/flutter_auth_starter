@@ -6,6 +6,7 @@ import 'core/imageProviders/gravatar_provider.dart';
 import 'core/imageProviders/user_photo_url_provider.dart';
 
 AuthService createMockedAuthService() {
+  print(">>>>> AUTHENTICATION in MOCKED MODE <<<<<");
   var authService = new MockService();
   authService.preAuthPhotoProvider = new GravatarProvider();
   authService.postAuthPhotoProvider = new CombinedPhotoProvider()
