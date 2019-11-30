@@ -1,5 +1,7 @@
 # flutter_auth_starter
 
+**Note: I am no longer maintaining this project. I wrote this in the early stages of learning Flutter, and if given a second go at it would have made different architectural choices.**
+
 This auth starter project for flutter simplifies the addition of signing in and up of the user with the application. You could add full (albiet mocked) authentication flow within your flutter app within minutes.
 
 This is an opinionated view of authentication within a flutter app. Specific use cases may not be covered or different to what is expected.
